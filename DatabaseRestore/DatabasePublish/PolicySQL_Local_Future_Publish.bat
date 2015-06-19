@@ -1,0 +1,1 @@
+PolicySQL_Local_Publish.bat dev.future

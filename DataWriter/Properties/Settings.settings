@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DataWriter.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DatabaseServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ERIC-PC\SQLDEV</Value>
+    </Setting>
+    <Setting Name="Database" Type="System.String" Scope="User">
+      <Value Profile="(Default)">CrashBurn</Value>
+    </Setting>
+    <Setting Name="Login" Type="System.String" Scope="User">
+      <Value Profile="(Default)">user</Value>
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">password</Value>
+    </Setting>
+    <Setting Name="LogPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">c:\dev\DataWriter\logs</Value>
+    </Setting>
+    <Setting Name="LogRoot" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DataWriter</Value>
+    </Setting>
+    <Setting Name="LogFilter" Type="System.String" Scope="User">
+      <Value Profile="(Default)">INFO</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
