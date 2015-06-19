@@ -1,0 +1,26 @@
+
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService", "MyService.csproj", "{CE7AB388-AA97-431C-9EB6-38855298FA6C}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MyServiceSetup", "Setup\Setup.vdproj", "{39D165BD-1F3E-409A-B840-4E143F6CD53B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE7AB388-AA97-431C-9EB6-38855298FA6C}.Debug|x86.ActiveCfg = Debug|x86
+		{CE7AB388-AA97-431C-9EB6-38855298FA6C}.Debug|x86.Build.0 = Debug|x86
+		{CE7AB388-AA97-431C-9EB6-38855298FA6C}.Release|x86.ActiveCfg = Release|x86
+		{CE7AB388-AA97-431C-9EB6-38855298FA6C}.Release|x86.Build.0 = Release|x86
+		{39D165BD-1F3E-409A-B840-4E143F6CD53B}.Debug|x86.ActiveCfg = Debug
+		{39D165BD-1F3E-409A-B840-4E143F6CD53B}.Debug|x86.Build.0 = Debug
+		{39D165BD-1F3E-409A-B840-4E143F6CD53B}.Release|x86.ActiveCfg = Release
+		{39D165BD-1F3E-409A-B840-4E143F6CD53B}.Release|x86.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

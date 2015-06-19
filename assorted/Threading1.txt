@@ -1,0 +1,43 @@
+using System;
+using System.Threading;
+
+namespace Threading1
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Thread t = new Thread(new ThreadStart(MyIdleThread));
+      t.Priority = ThreadPriority.Lowest;
+      t.Start();
+      //t.Interrupt();
+      t.Join();
+      Console.WriteLine("something important done");
+      Console.ReadLine();
+    }
+
+    static void MyIdleThread()
+    {
+      try
+      {
+        Console.WriteLine("thread... start");
+        DateTime start = DateTime.Now;
+        int elapsed=0;
+        while (elapsed < 5)
+        {
+          elapsed=Math.Abs((int)DateTime.Now.Subtract(start).TotalSeconds);
+          Console.WriteLine("thread... {0}",elapsed);
+          Thread.Sleep(1000);
+        }
+        Console.WriteLine("thread... complete");
+      }
+      catch (System.Threading.ThreadInterruptedException)
+      {
+        Console.WriteLine("thread... interrupted");
+      }
+      finally
+      {
+      }
+    }
+  }
+}

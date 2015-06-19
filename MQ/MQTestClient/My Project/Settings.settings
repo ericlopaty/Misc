@@ -1,0 +1,78 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="MQ_QMGR_Custom_Channel_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">QM_TEST.SVRCONN</Value>
+    </Setting>
+    <Setting Name="MQ_QMGR_Host_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.2.154</Value>
+    </Setting>
+    <Setting Name="MQ_QMGR_Queue_Manager" Type="System.String" Scope="User">
+      <Value Profile="(Default)">QM_infocor2</Value>
+    </Setting>
+    <Setting Name="MQ_Datagram_Receive_Queue" Type="System.String" Scope="User">
+      <Value Profile="(Default)">II.ARP.REQUEST.APP.SCAN.REPLY</Value>
+    </Setting>
+    <Setting Name="MQ_QMGR_Port" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1414</Value>
+    </Setting>
+    <Setting Name="MQ_Datagram_Receive_Wait_Interval" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="MQ_Datagram_Send_Timeout_Interval" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="MQ_Datagram_Send_Queue" Type="System.String" Scope="User">
+      <Value Profile="(Default)">II.ARP.REQUEST.APP.SCAN</Value>
+    </Setting>
+    <Setting Name="MQ_SendRequestReply_Queue" Type="System.String" Scope="User">
+      <Value Profile="(Default)">II.ARP.REQUEST.APP.STATUS</Value>
+    </Setting>
+    <Setting Name="MQ_SendRequestReply_Timeout_Interval" Type="System.String" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="MQ_SendRequestReply_ReplyQueue" Type="System.String" Scope="User">
+      <Value Profile="(Default)">II.ARP.REQUEST.APP.STATUS.REPLY</Value>
+    </Setting>
+    <Setting Name="MQ_GetRequestReply_RequestQueue" Type="System.String" Scope="User">
+      <Value Profile="(Default)">II.PLUS.ARP.RESP</Value>
+    </Setting>
+    <Setting Name="MQ_GetRequestReply_Timeout_Interval" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="Datagram_Send_Msgs" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Datagram_Receive_Msgs" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Send_Request_Msgs" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Get_Request_Msgs" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Timer_Interval" Type="System.String" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="ValidateMsgFormat" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="EnableMQAppStatus" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="EnableMQAppRequest" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="EnableMQAppReply" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InvalidMsg" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MQ_SecurityExit" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

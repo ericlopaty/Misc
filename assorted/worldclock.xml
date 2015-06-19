@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<timezones>
+	<timezone>
+		<name>AST</name>
+		<winterLabel>AST</winterLabel>
+		<summerLabel>ADT</summerLabel>
+		<startMonth>3</startMonth>
+		<startSunday>1</startSunday>
+		<startHour>2</startHour>
+		<endHour>3</endHour>
+		<endMonth>10</endMonth>
+		<endSunday>L</endSunday>
+		<winterOffset>-4</winterOffset>
+		<summerOffset>-5</summerOffset>
+	</timezone>
+	<timezone name="AST;ADT" start="2" end="2" winterOffset="-4" summerOffset="-3"/>
+	<timezone name="EST;EDT" start="2" end="2" winterOffset="-5" summerOffset="-4"/>
+	<timezone name="CST;CDT" start="2" end="2" winterOffset="-6" summerOffset="-5"/>
+	<timezone name="MST;MDT" start="2" end="2" winterOffset="-7" summerOffset="-6"/>
+	<timezone name="PST;PDT" start="2" end="2" winterOffset="-8" summerOffset="-7"/>
+	<timezone name="CET;CEST" start="2" end="3" winterOffset="1" summerOffset="2"/>
+	<timezone name="WET;WEST" start="1" end="2" winterOffset="0" summerOffset="1"/>
+	<timezone name="GMT;BST" start="1" end="2" winterOffste="0" summerOffset="1"/>
+	<timezone name="GMT;IST" start="1" end="2" winterOffste="0" summerOffset="1"/>
+</timezones>
+<cities>
+	<!-- North America -->
+	<city name='New York' TimeTimeZone='EST;EDT'/>
+	<city name='San Francisco' TimeTimeZone='PST;PDT'/>
+	<city name='San Diego' TimeZone='PST;PDT'/>
+	<city name='Atlanta' TimeZone='EST;EDT'/>
+	<city name='Boston' TimeZone='EST;EDT'/>
+	<city name='Washington DC' TimeZone='EST;EDT'/>
+	<city name='Orlando' TimeZone='EST;EDT'/>
+	<city name='Philadelphia' TimeZone='EST;EDT'/>
+	<city name='Los Angeles' TimeZone='PST;PDT'/>
+	<city name='Menlo Park' TimeZone='PST;PDT'/>
+	<city name='Austin' TimeZone='CST;CDT'/>
+	<city name='Chicago' TimeZone='CST;CDT'/>
+	<city name='Denver' TimeZone='MST;MDT'/>
+	<city name='Dallas' TimeZone='CST;CDT'/>
+	<city Name='Houston' TimeZone='CST;CDT'/>
+	<city name='Hamilton' TimeZone='EST;EDT'/>
+	<city name='Toronto' TimeZone='EST;EDT'/>
+	<city name='Halifax' TimeZone='AST'/>
+	<city Name='Montreal' />
+	<!-- Europe -->
+	<city name='London' TimeZone='GMT;BST'/>
+	<city Name='Amsterdam' TimeZone='CET;CEST'/>
+	<city Name='Dublin' TimeZone='GMT;IST'/>
+	<city Name='Frankfurt' TimeZone='CET;CEST'/>
+	<city Name='Geneva' TimeZone='CET;CEST'/>
+	<city Name='Lisbon' TimeZone='WET;WEST'/>
+	<city Name='Luxembourg' TimeZone='CET;CEST'/>
+	<city Name='Madrid' TimeZone='CET;CEST'/>
+	<city Name='Milan' TimeZone='CET;CEST'/>
+	<city Name='Paris' TimeZone='CET;CEST'/>
+	<city Name='Zurich' TimeZone='CET;CEST'/>
+	<city Name='Stockholm' TimeZone='CET;CEST'/>
+	<city Name='Moscow' />
+	<city Name='Tel Aviv' />
+	<!-- Asia -->
+	<city name='Tokyo' TimeZone='9'/>
+	<city Name='Beijing' />
+	<city name='Hong Kong' TimeZone='8'/>
+	<city name='Mumbai' TimeZone='5.5'/>
+	<city name='Pune' TimeZone='5.5'/>
+	<city Name='Bangkok' TimeZone='7'/>
+	<city Name='Seoul' />
+	<city Name='Shanghai' />
+	<city Name='Singapore' />
+	<city Name='Sydney' />
+	<city Name='Taipei' />
+	<city Name='Melbourne' />
+	<!-- South America -->
+	<city Name='Buenos Aires' />
+	<city Name='Mexico City' />
+	<city Name='Sao Paulo' />
+	<!-- Africa -->
+	<city Name='Johannesburg' />
+</cities>

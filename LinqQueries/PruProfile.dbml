@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="PruProfile" Class="PruProfileDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=PAERSCBBLD0314;Initial Catalog=PruProfile;Integrated Security=True" SettingsObjectName="LinqQueries.Properties.Settings" SettingsPropertyName="PruProfileConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.TblKeyName" Member="TblKeyNames">
+    <Type Name="TblKeyName">
+      <Column Name="PruAppName" Type="System.String" DbType="Char(2)" CanBeNull="true" />
+      <Column Name="PruKeyId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PruKeyName" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TblKeyValue" Member="TblKeyValues">
+    <Type Name="TblKeyValue">
+      <Column Name="PruAppName" Type="System.String" DbType="Char(2)" CanBeNull="true" />
+      <Column Name="PruKeyId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PruUserId" Type="System.String" DbType="Char(7)" CanBeNull="true" />
+      <Column Name="PruKeyValue" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblpersoninfo" Member="tblpersoninfos">
+    <Type Name="tblpersoninfo">
+      <Column Name="First_name" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Last_name" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="UserId" Type="System.String" DbType="VarChar(7) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CaseMgrId" Type="System.String" DbType="VarChar(4)" CanBeNull="true" />
+      <Column Name="UserRole" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="UserTeam" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Location" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="PIWDVersion" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="LastLogin" Type="System.String" DbType="VarChar(26)" CanBeNull="true" />
+      <Column Name="LastModified_User" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="LastModified_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.usp_AdminCopyUser" Method="usp_AdminCopyUser">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="srcPersonId" Type="System.String" DbType="Char(7)" />
+    <Parameter Name="destPersonId" Type="System.String" DbType="Char(7)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_AdminDeleteUserInfo" Method="usp_AdminDeleteUserInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="PersonId" Parameter="personId" Type="System.String" DbType="Char(7)" />
+    <Parameter Name="KeyName" Parameter="keyName" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyValue" Parameter="keyValue" Type="System.String" DbType="VarChar(255)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_AdminGetUserInfo" Method="usp_AdminGetUserInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="PersonId" Parameter="personId" Type="System.String" DbType="Char(7)" />
+    <Parameter Name="KeyName" Parameter="keyName" Type="System.String" DbType="VarChar(255)" />
+    <ElementType Name="usp_AdminGetUserInfoResult">
+      <Column Name="PruKeyValue" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.usp_AdminInsertUserInfo" Method="usp_AdminInsertUserInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="PersonId" Parameter="personId" Type="System.String" DbType="Char(7)" />
+    <Parameter Name="KeyName" Parameter="keyName" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyNewValue" Parameter="keyNewValue" Type="System.String" DbType="VarChar(255)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_AdminUpdateUserInfo" Method="usp_AdminUpdateUserInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="PersonId" Parameter="personId" Type="System.String" DbType="Char(7)" />
+    <Parameter Name="KeyName" Parameter="keyName" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyNewValue" Parameter="keyNewValue" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyOldValue" Parameter="keyOldValue" Type="System.String" DbType="VarChar(255)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_DeleteAppInfo" Method="usp_DeleteAppInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="KeyName" Parameter="keyName" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyValue" Parameter="keyValue" Type="System.String" DbType="VarChar(255)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_DeletePersonInfo" Method="usp_DeletePersonInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="PersonId" Parameter="personId" Type="System.String" DbType="Char(7)" />
+    <Parameter Name="KeyName" Parameter="keyName" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyValue" Parameter="keyValue" Type="System.String" DbType="VarChar(255)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_GetAllAppInfo" Method="usp_GetAllAppInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <ElementType Name="usp_GetAllAppInfoResult">
+      <Column Name="PruKeyName" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="PruKeyValue" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.usp_GetPersonInfo" Method="usp_GetPersonInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="PersonId" Parameter="personId" Type="System.String" DbType="Char(7)" />
+    <Parameter Name="KeyName" Parameter="keyName" Type="System.String" DbType="VarChar(255)" />
+    <ElementType Name="usp_GetPersonInfoResult">
+      <Column Name="PruKeyValue" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.usp_InsertAppInfo" Method="usp_InsertAppInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="KeyName" Parameter="keyName" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyNewValue" Parameter="keyNewValue" Type="System.String" DbType="VarChar(255)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_InsertPersonInfo" Method="usp_InsertPersonInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="PersonId" Parameter="personId" Type="System.String" DbType="Char(7)" />
+    <Parameter Name="KeyName" Parameter="keyName" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyValue" Parameter="keyValue" Type="System.String" DbType="VarChar(255)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_IsAdmin" Method="usp_IsAdmin">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_IsDBO" Method="usp_IsDBO">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_SetLastLoginInfo" Method="usp_SetLastLoginInfo">
+    <Parameter Name="strUserId" Type="System.String" DbType="VarChar(7)" />
+    <Parameter Name="strLastLogin" Type="System.String" DbType="VarChar(26)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_UpdateAppInfo" Method="usp_UpdateAppInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="KeyName" Parameter="keyName" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyNewValue" Parameter="keyNewValue" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyOldValue" Parameter="keyOldValue" Type="System.String" DbType="VarChar(255)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.usp_UpdatePersonInfo" Method="usp_UpdatePersonInfo">
+    <Parameter Name="AppName" Parameter="appName" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="PersonId" Parameter="personId" Type="System.String" DbType="Char(7)" />
+    <Parameter Name="KeyName" Parameter="keyName" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyNewValue" Parameter="keyNewValue" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="KeyOldValue" Parameter="keyOldValue" Type="System.String" DbType="VarChar(255)" />
+    <Return Type="System.Int32" />
+  </Function>
+</Database>

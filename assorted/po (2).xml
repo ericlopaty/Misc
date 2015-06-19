@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE po SYSTEM "po.dtd">
+<!-- Purchase Order -->
+<po id="PO1456">
+  <date year="2002" month="6" day="14" />
+  <address type="shipping">
+    <name>Frits Mendels</name>
+    <street>152 Cherry St</street>
+    <city>San Francisco</city>
+    <state>CA</state>
+    <zip>94045</zip>
+  </address>
+  <address type="billing">
+    <name>Frits Mendels</name>
+    <street>PO Box 6789</street>
+    <city>San Francisco</city>
+    <state>CA</state>
+    <zip>94123-6798</zip>
+  </address>
+  <address type="mailing">
+    <name>Frits Mendels</name>
+    <street>PO Box 6789</street>
+    <city>San Francisco</city>
+    <state>CA</state>
+    <zip>94123-6798</zip>
+  </address>
+  <items>
+    <item quantity="1" 
+          productCode="R-273" 
+          description="14.4 Volt Cordless Drill" 
+          unitCost="189.95" />
+    <item quantity="1" 
+          productCode="1632S" 
+          description="12 Piece Drill Bit Set" 
+          unitCost="14.95" /> 
+  </items>  
+  <extra>
+  	<![CDATA[funky "text" <with> markup </with>]]>
+  </extra>
+</po>

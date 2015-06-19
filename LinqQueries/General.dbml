@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="General" Class="GeneralDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=W-D344FWC1;Initial Catalog=General;Integrated Security=True" SettingsObjectName="LinqQueries.Properties.Settings" SettingsPropertyName="GeneralConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Number" Member="Numbers">
+    <Type Name="Number">
+      <Column Name="RowID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="RandomNumber" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="HexNumber" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="WordNumber" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

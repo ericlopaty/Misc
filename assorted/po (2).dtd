@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT po (date,address+,items)>
+<!ATTLIST po id ID #REQUIRED>
+
+<!ELEMENT date EMPTY>
+<!ATTLIST date year CDATA #REQUIRED
+               month (1|2|3|4|5|6|7|8|9|10|11|12) #REQUIRED
+               day (1|2|3|4|5|6|7|8|9|10|11|
+                    12|13|14|15|16|17|18|19|
+                    20|21|22|23|24|25|26|27|
+                    28|29|30|31) #REQUIRED>
+
+<!ELEMENT address (name,company?,street+,city,state,zip)>
+<!ATTLIST address type (billing|shipping) #REQUIRED>
+
+<!ELEMENT name    (#PCDATA)>
+
+<!ELEMENT company (#PCDATA)>
+
+<!ELEMENT street  (#PCDATA)>
+
+<!ELEMENT city    (#PCDATA)>
+
+<!ELEMENT state   (#PCDATA)>
+
+<!ELEMENT zip     (#PCDATA)>
+
+<!ELEMENT items (item)+>
+
+<!ELEMENT item EMPTY>
+<!ATTLIST item quantity CDATA #REQUIRED
+               productCode CDATA #REQUIRED
+               description CDATA #REQUIRED
+               unitCost CDATA #REQUIRED>

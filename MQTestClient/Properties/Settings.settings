@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MQTestClient.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="QueueManager" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PRUQMGR</Value>
+    </Setting>
+    <Setting Name="MQHost" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">VMMQ6SRV</Value>
+    </Setting>
+    <Setting Name="Channel" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CLNTA.M33P.33</Value>
+    </Setting>
+    <Setting Name="Port" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1414</Value>
+    </Setting>
+    <Setting Name="SecurityExit" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>
