@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<orders xmlns="http://schemas.devleap.com/Orders">
+  <order idCustomer="ALFKI" idProduct="1" quantity="10" price="20.59"/>
+  <order idCustomer="ANATR" idProduct="5" quantity="20" price="12.99"/>
+  <order idCustomer="KOENE" idProduct="7" quantity="15" price="35.50"/>
+</orders>
