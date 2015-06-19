@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSDNMagNSEBase", "MSDNMagNSEBase.csproj", "{7E61DC48-4FFE-444E-A8B6-580C9817A402}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSDNMagazineSampleNamespaceExtension", "..\MSDNMagazineSampleNamespaceExtension\MSDNMagazineSampleNamespaceExtension.csproj", "{EA486273-39BE-4151-B11A-59BED3250774}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{7E61DC48-4FFE-444E-A8B6-580C9817A402}.Debug.ActiveCfg = Debug|.NET
+		{7E61DC48-4FFE-444E-A8B6-580C9817A402}.Debug.Build.0 = Debug|.NET
+		{7E61DC48-4FFE-444E-A8B6-580C9817A402}.Release.ActiveCfg = Release|.NET
+		{7E61DC48-4FFE-444E-A8B6-580C9817A402}.Release.Build.0 = Release|.NET
+		{EA486273-39BE-4151-B11A-59BED3250774}.Debug.ActiveCfg = Debug|.NET
+		{EA486273-39BE-4151-B11A-59BED3250774}.Debug.Build.0 = Debug|.NET
+		{EA486273-39BE-4151-B11A-59BED3250774}.Release.ActiveCfg = Release|.NET
+		{EA486273-39BE-4151-B11A-59BED3250774}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

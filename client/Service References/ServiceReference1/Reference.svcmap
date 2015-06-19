@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="362bb9b9-affe-4bef-a4d8-62dd0b524591" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8000/ServiceModelSamples/Service" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="Service.xsd" MetadataType="Schema" ID="4c143f07-08f8-4c7c-8c53-fdc41e379ca3" SourceId="1" SourceUrl="http://localhost:8000/ServiceModelSamples/Service?xsd=xsd0" />
+    <MetadataFile FileName="CalculatorService.wsdl" MetadataType="Wsdl" ID="038ccbb7-db96-444c-8f68-1a59d3723f96" SourceId="1" SourceUrl="http://localhost:8000/ServiceModelSamples/Service?wsdl" />
+    <MetadataFile FileName="Service.disco" MetadataType="Disco" ID="4773621c-86b0-4cb4-83e2-de95f1d3dcfb" SourceId="1" SourceUrl="http://localhost:8000/ServiceModelSamples/Service?disco" />
+    <MetadataFile FileName="Service1.xsd" MetadataType="Schema" ID="d2c033ba-48b9-42ec-b913-d2ae8e215b59" SourceId="1" SourceUrl="http://localhost:8000/ServiceModelSamples/Service?xsd=xsd1" />
+    <MetadataFile FileName="Service.wsdl" MetadataType="Wsdl" ID="f68c78ab-4419-4cff-afde-8d3bd36ed657" SourceId="1" SourceUrl="http://localhost:8000/ServiceModelSamples/Service?wsdl=wsdl0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
