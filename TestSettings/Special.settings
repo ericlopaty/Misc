@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TestSettings" GeneratedClassName="Special">
+  <Profiles />
+  <Settings>
+    <Setting Name="Setting3" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Special Application Setting</Value>
+    </Setting>
+    <Setting Name="Setting4" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Special User Setting</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
