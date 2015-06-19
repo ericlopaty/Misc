@@ -1,0 +1,321 @@
+﻿XmlAnyElementAttribute  Place this attribute on a member whose type or return type is an array of XmlElement or XmlNode. Any elements deserialized from XML that do not have a corresponding member in the class are placed in the array.  
+XmlArrayAttribute  Place this attribute on a member that returns an array of objects to produce nested XML elements.  
+XmlArrayItemAttribute  Place this attribute on a member that returns an array of objects to indicate the type of each of the nested XML elements.  
+XmlAttributeAttribute  Place this attribute on a member to indicate that it is to be serialized as an XML attribute.  
+XmlChoiceIdentifierAttribute  Place this attribute on a member to indicate that the type of the data to be serialized is indicated by another member, returning an enumeration.  
+XmlElementAttribute  Place this attribute on a member to indicate that it is to be serialized as an XML element.  
+XmlEnumAttribute  Place this attribute on a member of an enumeration to set the name that XmlSerializer uses for the member.  
+XmlIgnoreAttribute  Place this attribute on a member to indicate that it should be ignored for purposes of serialization.  
+XmlIncludeAttribute  Place this attribute on a member to have XmlSerializer recognize base and derived classes.  
+XmlRootAttribute  Place this attribute on a class to indicate that the class should be serialized as the document element.  
+XmlTextAttribute  Place this attribute on a member to indicate that it should be serialized as XML text.  
+XmlTypeAttribute  Place this attribute on a class to indicate the name of the type and namespace of the XML element.  
+System.ComponentModel.DefaultValueAttribute  Place this attribute on a member to indicate the default value for a member if no value is assigned.  
+
+With these attributes, you can take an arbitrary C# type and tell XmlSerializer exactly how you would like to serialize it to XML.
+
+Example 9-7 shows a new XML format for an instance of the personnel records from Example 9-4.
+
+Example 9-7. Angus Hardware personnel records in XML
+<?xml version="1.0"?>
+<personnel>
+<employee firstname="Niel" middleinitial="M" lastname="Bornstein" 
+    hiredate="2001-01-01T00:00:00.0000000-05:00">
+    <addresses>
+      <address type="Home">
+        <street>999 Wilford Trace</street>
+        <city>Atlanta</city>
+        <state>Georgia</state>
+        <zip>30037</zip>
+      </address>
+    </addresses>
+  </employee>
+</personnel>
+
+If you were to just serialize a Personnel object to XML, all the data would appear in elements as shown in Example 9-8.
+
+Example 9-8. XML serialized without attributes
+Code View: Scroll / Show All
+<?xml version="1.0"?>
+<Personnel xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/
+2001/XMLSchema-instance">
+  <Employees>
+    <Employee>
+      <FirstName>Niel</FirstName>
+      <MiddleInitial>M</MiddleInitial>
+      <LastName>Bornstein</LastName>
+      <Addresses>
+        <Address>
+          <AddressType>Home</AddressType>
+          <Street>
+            <string>999 Wilford Trace</string>
+          </Street>
+          <City>Atlanta</City>
+          <State>GA</State>
+          <Zip>30037</Zip>
+        </Address>
+      </Addresses>
+      <HireDate>2001-01-01T00:00:00.0000000-05:00</HireDate>
+    </Employee>
+  </Employees>
+</Personnel>
+
+That's fine, if you want all your data in elements, but some people prefer a healthy mix of elements and attributes; this element-centric output does not match the format in Example 9-7. In addition, the element names don't match the format you want.
+
+To generate the XML you want, repeat the code from Example 9-4, with the addition of attributes to control the serialization. Let me step through the changes in each class. First, AddressType doesn't need to change at all:
+
+public enum AddressType {
+  Home,
+  Office,
+  Billing,
+  Shipping,
+  Mailing,
+  Day,
+  Evening,
+  FAX
+}
+
+If you'll look again at Example 9-7, you'll see that each state is actually listed by its full name, not the abbreviation as listed in the State enumeration. Here I've added an XmlEnumAttribute for each state name. Note that I've skipped some in the interest of space:
+
+public enum State {
+  [XmlEnum(Name="Alaska")]
+  AK,
+  [XmlEnum(Name="Alabama")]
+  AL,
+  [XmlEnum(Name="Arkansas")]
+  AR,
+  [XmlEnum(Name="Arizona")]
+  AZ,
+// ...
+  [XmlEnum(Name="Washington")]
+  WA,
+  [XmlEnum(Name="Wisconsin")]
+  WI,
+  [XmlEnum(Name="West Virginia")]
+  WV,
+  [XmlEnum(Name="Wyoming")]
+  WY
+}
+
+The Address class has one attribute, type, and four elements. Here I've added XmlAttributeAttribute and XmlElementAttribute, as appropriate. The AttributeName and ElementName fields of each attribute are used to set the names of the XML attributes and elements, respectively:
+
+public class Address {
+  [XmlAttribute(AttributeName="type")]
+  public AddressType AddressType;
+  [XmlElement(ElementName="street")]
+  public string[ ] Street;
+  [XmlElement(ElementName="city")]
+  public string City;
+  [XmlElement(ElementName="state")]
+  public State State;
+  [XmlElement(ElementName="zip")]
+  public string Zip;
+}
+
+Similar to Address, the TelephoneNumber class has one attribute and three elements. Again, I've decorated each member with the appropriate attribute. Note also that here, as in Address, I've set the names of the attributes and elements to match the ones in the XML; that is, they all start with lowercase letters:
+
+public class TelephoneNumber {
+  [XmlAttribute(AttributeName="type")]
+  public AddressType AddressType;
+  [XmlElement(ElementName="areacode")]
+  public string AreaCode;
+  [XmlElement(ElementName="exchange")]
+  public string Exchange;
+  [XmlElement(ElementName="number")]
+  public string Number;
+}
+
+Now we come to the meat of the personnel record, the Employee. This class has three attributes: firstname, middleinitial, and lastname, which I've treated with the appropriate attribute. However, the Employee class also has two additional elements, addresses and telephones. These two elements actually contain nested arrays of elements, so I've used the XmlArray and XmlArrayItem attributes to help the serializer figure out what to do with the XML elements it reads:
+
+public class Employee {
+  [XmlAttribute(AttributeName="firstname")]
+  public string FirstName;
+  [XmlAttribute(AttributeName="middleinitial")]
+  public string MiddleInitial;
+  [XmlAttribute(AttributeName="lastname")]
+  public string LastName;
+  
+  [XmlArray(ElementName="addresses")]
+  [XmlArrayItem(ElementName="address")]
+  public Address [ ] Addresses;
+  [XmlArray(ElementName="telephones")]
+  [XmlArrayItem(ElementName="telephone")]
+  public TelephoneNumber [ ] TelephoneNumbers;
+
+  [XmlAttribute(AttributeName="hiredate")]
+  public DateTime HireDate; 
+}
+
+Here's the document element, personnel, which is decorated with XmlRootAttribute. Although the Employees member is an array of Employee objects, it is not a nested array, like addresses and telephones. By adding the XmlElement attribute directly to the member, the XmlSerializer knows that this member is to be serialized as an array of employee elements, without a separate top-level element:
+
+[XmlRoot(ElementName="personnel")]
+public class Personnel {
+  [XmlElement(ElementName="employee")]
+  public Employee [ ] Employees;
+}
+
+Finally, I've made some changes to the Serializer class, which I introduced in Example 9-5. Serializer's Main( ) method still uses the CreatePersonnel( ) to create some personnel records, but it then instantiates an XmlSerializer to deserialize the objects it created back out to a file:
+
+public class Serializer {
+  public static void Main(string [ ] args) {
+    Personnel personnel = CreatePersonnel( );
+    XmlSerializer serializer = new XmlSerializer(typeof(Personnel));
+    using (FileStream stream = File.OpenWrite("Personnel.xml")) {
+      serializer.Serialize(stream,personnel);
+    }
+  } 
+}
+
+Unlike the SoapFormatter and BinaryFormatter, the XmlSerializer constructor takes the Type of the object being serialized as a parameter. This is because, unlike the formatters, the serializer is actually created specifically to handle one particular type of object.
+
+ The XmlSerializer actually generates and compiles the source code of a class to serialize the object to XML at runtime. Because of this, you may notice a slight performance difference the first time you instantiate an XmlSerializer for a particular type during each run of your program.
+
+Deserializing an object from XML is as simple as calling the XmlSerializer's Deserialize( ) method:
+
+XmlSerializer serializer = new XmlSerializer(typeof(Personnel));
+using (FileStream stream = File.OpenRead("Personnel.xml")) {
+  personnel = (Personnel)serializer.Deserialize(stream);
+}
+
+This data is being serialized to and deserialized from files, but it could be any Stream. When deserializing from an XmlReader, you can ensure that the data stream is valid for the XmlSerializer instance you're using. The CanDeserialize( ) method takes an XmlReader parameter, and returns a Boolean value indicating whether the XmlReader contains data that can be deserialized by the XmlSerializer.
+
+This is convenient, because when you're deserializing data from a source outside of your control, you don't always know what the file contains. The CanDeserialize( ) method can be used to control processing when you're unsure of the XML stream's contents.
+
+At runtime, you can override the attributes that affect serialization with the XmlAttributeOverrides class. This class serves as the container for a collection of XmlAttributes instances, each one of which holds the overridden attributes for a particular type. XmlAttributes has a property for each type of XML attribute; for example, the XmlAttributeAttribute can be set with the XmlAttribute property. For those attributes that can exist in multiples, such as XmlElementAttribute, the property returns a collection of those attributes. For example, the XmlElements property returns a XmlElementAttributes collection, to which you can add XmlElementAttribute instances.
+
+XmlAttributeOverrides is convenient if you want to serialize an object for which you don't have or can't alter the source code. You can customize the serialization in exactly the same ways as you could by applying the attributes in the source.
+
+I've altered the same program we've been using to change the name of the root element from personnel to employees. The new lines are highlighted: 
+
+Personnel personnel = CreatePersonnel( );
+
+XmlAttributeOverrides overrides = new XmlAttributeOverrides( );
+XmlAttributes attributes = new XmlAttributes( );
+attributes.XmlRoot = new XmlRootAttribute("employees");
+overrides.Add(typeof(Personnel), attributes);
+
+XmlSerializer serializer = 
+  new XmlSerializer(typeof(Personnel), overrides);
+using (FileStream stream = File.OpenWrite("Personnel.xml")) {
+  serializer.Serialize(stream,personnel);
+}
+
+ SOAP and XML Serialization > SOAP Serialization
+9.4. SOAP Serialization
+There's another form of XML serialization, which may seem redundant at first. You'll recall that runtime serialization was able to encode an object using SOAP. The SoapFormatter produced a SOAP stream that was optimized for recreating the original object in another .NET application; specifically, the object and all its members were encoded using CLR types. A non-.NET application reading that SOAP stream would most likely have no idea what to do with the data.
+
+However, the XmlSerializer can also serialize an object to SOAP, with an emphasis on the standard SOAP encodings. With SOAP serialization, you get all the interoperability of XML, with additional CLR awareness. The key to standards-compliant SOAP serialization is the SoapReflectionImporter class.
+
+The .NET Framework SDK Documentation will tell you that SoapReflectionImporter is reserved for internal use, and should not be used by your application. However, it does have one constructor and one method that you can use to serialize objects to SOAP.
+
+The code in Example 9-9 demonstrates how to serialize the personnel records from earlier examples to SOAP, using the same Personnel class and the CreatePersonnel( ) method from before.
+
+Example 9-9. Serializing personnel records to SOAP
+public static void Main(string [ ] args) {
+
+  Personnel personnel = CreatePersonnel( );
+    
+  SoapReflectionImporter importer = new SoapReflectionImporter( );
+  XmlTypeMapping mapping = importer.ImportTypeMapping(typeof(Personnel));
+  XmlSerializer serializer = new XmlSerializer(mapping);
+    
+  using (StreamWriter stream = File.CreateText("PersonnelSoap2.xml")) {
+    XmlTextWriter writer = new XmlTextWriter(stream);
+    writer.Formatting = Formatting.Indented;
+    writer.WriteStartElement("AngusHardware");
+    serializer.Serialize(writer,personnel);
+    writer.WriteEndElement( );
+  }
+}
+
+The object will be serialized to the XML shown below:
+
+Code View: Scroll / Show All
+<AngusHardware>
+  <Personnel xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/
+2001/XMLSchema-instance" id="id1">
+    <Employees href="#id2" />
+  </Personnel>
+  <q1:Array id="id2" q1:arrayType="Employee[1]" xmlns:q1="http://schemas.xmlsoap.org/
+soap/encoding/">
+    <Item href="#id3" />
+  </q1:Array>
+  <Employee id="id3" d2p1:type="Employee" xmlns:d2p1="http://www.w3.org/2001/XMLSchema-
+instance">
+    <FirstName xmlns:q2="http://www.w3.org/2001/XMLSchema" d2p1:type="q2:string">
+Niel</FirstName>
+    <MiddleInitial xmlns:q3="http://www.w3.org/2001/XMLSchema" d2p1:type="q3:string"
+>M</MiddleInitial>
+    <LastName xmlns:q4="http://www.w3.org/2001/XMLSchema" d2p1:type="q4:string"
+>Bornstein</LastName>
+    <Addresses href="#id4" />
+    <HireDate xmlns:q5="http://www.w3.org/2001/XMLSchema" d2p1:type="q5:dateTime">
+2001-01-01T00:00:00.0000000-05:00</HireDate>
+  </Employee>
+  <q6:Array id="id4" q6:arrayType="Address[1]" xmlns:q6="http://schemas.xmlsoap.org/
+soap/encoding/">
+    <Item href="#id5" />
+  </q6:Array>
+  <Address id="id5" d2p1:type="Address" xmlns:d2p1="http://www.w3.org/2001/XMLSchema-
+instance">
+    <AddressType d2p1:type="AddressType">Home</AddressType>
+    <Street href="#id6" />
+    <City xmlns:q7="http://www.w3.org/2001/XMLSchema" d2p1:type="q7:string"
+>Atlanta</City>
+    <State d2p1:type="State">GA</State>
+    <Zip xmlns:q8="http://www.w3.org/2001/XMLSchema" d2p1:type="q8:string">30037
+</Zip>
+  </Address>
+  <q9:Array id="id6" xmlns:q10="http://www.w3.org/2001/XMLSchema" q9:arrayType="q10:
+string[1]" xmlns:q9="http://schemas.xmlsoap.org/soap/encoding/">
+    <Item>999 Wilford Trace</Item>
+  </q9:Array>
+</AngusHardware>
+
+That's not very pretty. Fortunately, just as there are attributes that affect the serialization of an object to XML, there are attributes that affect the serialization of an object to SOAP. Table 9-3 lists them, with their descriptions.
+
+Table 9-3. Attributes that affect SOAP serialization Attribute name  Description  
+SoapAttributeAttribute  Place this attribute on a member to indicate that it is to be serialized as a SOAP attribute.  
+SoapElementAttribute  Place this attribute on a member to indicate that it is to be serialized as a SOAP element.  
+SoapEnumAttribute  Place this attribute on a member that returns an enumeration type to indicate how it is to be serialized to SOAP.  
+SoapIgnoreAttribute  Place this attribute on a member to indicate that it is not to be serialized to SOAP.  
+SoapIncludeAttribute  Place this attribute on a member to have XmlSerializer recognize base and derived classes.  
+SoapTypeAttribute  Place this attribute on a class to indicate that the class is to be included in the generated XML Schema definition.  
+
+Just as with XML attributes, you can override the SOAP attributes that affect serialization at runtime. To make the Personnel object serialize a little more sensibly, you can either add the attributes to the Personnel type's source code, or you can add them using the SoapAttributeOverrides class.
+
+The use of SoapAttributeOverrides is similar to XmlAttributeOverrides. Rather than go into extreme detail, I'll just show you the code, again with the changes highlighted:
+
+Personnel personnel = CreatePersonnel( );
+
+SoapAttributeOverrides overrides = new SoapAttributeOverrides( );
+SoapAttributes attributes = new SoapAttributes( );
+attributes.SoapElement = new SoapElementAttribute("employees");
+overrides.Add(typeof(Personnel), "Employees",  attributes);
+
+SoapReflectionImporter importer = new SoapReflectionImporter(overrides);
+XmlTypeMapping mapping = importer.ImportTypeMapping(typeof(Personnel));
+XmlSerializer serializer = new XmlSerializer(mapping);
+
+using (StreamWriter stream = File.CreateText("PersonnelSoap2.xml")) {
+  XmlTextWriter writer = new XmlTextWriter(stream);
+  writer.Formatting = Formatting.Indented;
+  writer.WriteStartElement("AngusHardware");
+  serializer.Serialize(writer,personnel);
+  writer.WriteEndElement( );
+}
+
+The only changes effected by the SoapAttributeOverrides in this example is to change the name of the Employees element to employees, as shown here: 
+
+Code View: Scroll / Show All
+<AngusHardware>
+  <Personnel xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/
+2001/XMLSchema-instance" id="id1">
+    <employees href="#id2" />
+  </Personnel>
+  ...
+</AngusHardware>
+
+ SOAP and XML Serialization > Moving On
+9.5. Moving On
+All of the serialization methods I discussed in this chapter provide a robust environment for distributed computing. As you'll see in Chapter 10, SOAP is the basis for the .NET Framework's advanced web services and remoting capabilities.

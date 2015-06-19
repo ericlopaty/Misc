@@ -1,0 +1,1198 @@
+﻿ XML and Databases > Introduction to ADO.NET
+Chapter 11. XML and Databases
+XML is good for many things. It makes an excellent data interchange format for sharing data between disparate systems, whether through files on disk or through web services on a network. It can be used to share data among homogeneous systems, as in .NET remoting. It can even be used to present data to a person using a text editor for review and modification. In the end, though, the uses of XML are limited by the underlying data storage associated with the XML data; whether it's in a file or accessed across a network, it usually comes down to some sort of I/O stream.
+
+Relational databases are optimized to store large amounts of data, provide non-sequential access to it, and search and sort the data, all things which XML is not great at. Ultimately, this comes down to the structural difference between a piece of software that is built for the specific purpose of providing this sort of data storage versus XML, a data format which is not optimized for anything in particular.
+
+In addition to the structural differences, relational databases provide several properties that XML by itself cannot. The main properties of a relational database are usually referred to by their acronym ACID:
+
+Atomicity
+
+Any group of actions (called a transaction) taken on the database are done as a group and can only be undone as a group. Any failure of a part of a transaction causes the entire transaction to fail, and roll back the previous actions.
+
+Consistency
+
+Any transaction must cause the database to move from one consistent state to another. If a transaction causes the database to enter an inconsistent state, the whole transaction must fail atomically.
+
+Isolation
+
+Each transaction takes place in its own transaction space, and changes that are made within one transaction are invisible to other transactions until the transaction is complete. This ensures that other transactions always see the rest of the database in a consistent state.
+
+Durability
+
+The completed results of each transaction are permanent and will survive any sort of system failure.
+
+Obviously, XML is only a data format and cannot by itself ensure that any of the ACID properties will be implemented. In conjunction with ACID, relational databases provide fast, direct access to data in a way that XML cannot.
+
+It's important to note that XML could be used as the underlying storage format for a relational database, if the database designer wanted to implement the layers of logic to enforce ACID. XML can also be stored within a database to take advantage of ACID. XML, as a technology, does not provide a reliable data store for the sorts of mission-critical application that relational databases are designed for.
+
+The .NET Framework contains support for relational database access, and, as you might suspect, this support includes a rich set of XML-related features. I can't hope to tell you everything about using XML in databases with .NET, but I hope to give you a good introduction and tell you where to look for more information.
+
+In addition to ADO.NET, SQL Server and Microsoft Access both have their own native methods of accessing their data as XML. For basic information on SQL Server, the Microsoft SQL Server home page at http://www.microsoft.com/sql/ contains links to a wealth of information. SQL Server Magazine, at http://www.sqlmag.com/, is an excellent resource for SQL Server database administrators. The Microsoft Access home page is at http://www.microsoft.com/office/access/.
+
+ I assume some knowledge of relational databases and the Structured Query Language (SQL) in this chapter. If you don't already know what SQL is, I suggest picking up SQL in a Nutshell, by Kevin Kline with Daniel Kline, Ph.D. (O'Reilly). For specific information on the flavor of SQL used in Microsoft SQL Server, look at Transact-SQL Programming, by Kevin Kline, Lee Gould, and Andrew Zanevsky (O'Reilly).
+
+11.1. Introduction to ADO.NET
+The .NET data access layer is called ADO.NET and consists of two major ways of dealing with data. The first way, and the easiest for developers familiar with SQL, is implemented in terms of the IDataReader interface. The second way is the DataSet.
+
+Out of the box, .NET Framework Version 1.0 provides implementations of IDataReader in System.Data.SqlClient.SqlDataReader (for SQL Server data sources) and System.Data.OleDb.OleDbDataReader (for OLE data sources). .NET 1.1 adds the System.Data.Odbc and System.Data.OracleClient namespaces for access to ODBC and Oracle databases, respectively.
+
+ In fact, most of the classes in the System.Data.OleDb and System.Data.SqlClient namespaces simply provide implementations of interfaces in the System.Data namespace, so I'll just refer to the interfaces by their interface names, such as IDataReader, until we get down to examples. If you want to learn more about ADO.NET, I suggest ADO.NET in a Nutshell, by Bill Hamilton and Matthew MacDonald (O'Reilly).
+
+Before you can actually use the IDataReader to read data, you need to set up a connection to the database using the IDbConnection interface. Exactly how you do that depends on whether you're using the SqlConnection or the OleDbConnection, but each one has a ConnectionString property that you can use to specify the database you're connecting to.
+
+Creating an IDbConnection does not actually create the physical connection to the database. In fact, you can wait until the very last minute to open the connection, which you do by calling IDbConnection.Open( ).
+
+Once you've created the connection, you must specify what data you want to read. The IDbCommand interface represents a SQL command, and you can create an instance of it by calling IDbConnection.CreateCommand( ) or its constructor. You can create an IDbCommand before you call IDbConnection.Open( ).
+
+Executing the IDbCommand is as simple as calling one of its execute methods. There are three:
+
+IDbCommand.ExecuteNonQuery( ) is used to execute a SQL command that does not return any data, such as an insert, update, or delete statement.
+
+IDbCommand.ExecuteScalar( ) is used to execute a SQL command that returns a single value, such as select count(*).
+
+IDbCommand.ExecuteReader( ) is used to execute a SQL select command that returns a DataReader, which you can use to iterate over a number of rows and columns of resulting data.
+
+The usage of the first two methods should be fairly obvious, but ExecuteReader( ) bears a little further explanation.
+
+11.1.1. Reading Data
+Angus Hardware, like most retail stores, occasionally offers its customers discounts in the form of coupons. They like to track which customers take advantage of which coupons, both as a marketing tool, and to aid in fraud detection. They've decided that the best way to manage this coupon usage data is with a relational database.
+
+Figure 11-1 shows the portion of the coupon database schema I use in this chapter.
+
+Figure 11-1. Coupon database schema
+
+The results of any SQL select statement come in the form of a table of data. Although it may not represent any actual table in the database, it still consists of rows and columns. Take, for example, the following query:
+
+select coupon_code, total_discount, redemption_date
+from coupon_redemptions
+where redemption_date >= '11/7/2002' order by customer_id;
+
+This query returns a table of data that looks like Table 11-1.
+
+Table 11-1. Results of SQL select statement coupon_code  total_discount  redemption_date
+117GG  10.00  11/7/2002
+167YH  10.00  11/8/2002
+987UI  20.00  11/8/2002
+...
+
+The coupon_redemption table actually contains other columns, but because I only selected three, the result set only includes those three. In fact, you can see that these results are actually returned in order of a column that is not included in the result set, the customer_id. The result set also does not include all the rows, only the ones redeemed on or after November 7, 2002.
+
+The IDataReader returned from ExecuteReader( ) provides a forward-only, unbuffered view of the data result set. Its Read( ) method is used to iterate through the result records in whatever order they were returned, and returns false when there are no more records to read.
+
+The IDataReader interface also implements IDataRecord, which represents an individual data record. It provides a set of methods to read individual columns from the record. Although the IDataRecord is smart enough to do some conversions, it's up to you to know the type of each database column and what CLR types they can safely be converted to.
+
+ The SQL script used to create the database used for the examples in this chapter are on the web site for this book, along with all the sample code. If you don't have access to a SQL Server database, you can also use any OLE-compliant database by changing the classes from the ones in the System.Data.SqlClient namespace to those in the System.Data.OleDb namespace (or System.Data.Odbc or System.Data.OracleClient for an ODBC or Oracle database server if you're using Version 1.1 of the .NET Framework).
+
+You can also use MSDE, the Microsoft Data Engine, which is a freely redistributable desktop version of SQL Server with some minor restrictions. See http://www.microsoft.com/sql/techinfo/development/2000/MSDE2000.asp for more information on MSDE 2000.
+
+Let's build a program that reads redeemed coupons from a SQL Server database and prints them to the console.
+
+ The database connect string is different for every sort of database. You should consult your database administrator for the exact parameters for your database connection.
+
+First, create the database connection. This is a SQL Server database named "AngusHardware", and you can connect as the system administrator without a password:
+
+SqlConnection connection = new SqlConnection(
+  "Initial Catalog=AngusHardware; User ID=sa");
+
+ Of course, in the interest of system security, a real database server would always require a password for the sa user, and you would never want to connect your application to a database as the sa user in any case.
+
+Once the connection has been created (but not actually opened), you're free to use that connection to create SQL commands. This command will perform the query I introduced earlier, returning some coupons from the database:
+
+SqlCommand command = new SqlCommand(
+  "select coupon_code, total_discount, redemption_date " +
+  "from coupon_redemptions where redemption_date >= '11/7/2002' " +
+  "order by customer_id",
+  connection);
+
+Now that everything is set up, it's time to actually open the database connection:
+
+connection.Open( );
+
+ Note that this method call can fail if the database connect string was not specified correctly, even though the SqlConnection constructor has come and gone without incident. This can make it difficult to trace connection problems, so be sure your connect string is correct before getting too involved in other program logic.
+
+With an open connection, the SqlCommand can be executed. It's a select statement, so you can call ExecuteQuery( ) to return a SqlDataReader:
+
+SqlDataReader reader = command.ExecuteReader( );
+
+The SqlDataReader.Read( ) method returns a bool indicating whether a record was read from the database, so the while loop exits after the last record has been read. The code within the loop writes a line of text to the console containing the three columns selected from the database:
+
+while (reader.Read( )) {
+  Console.WriteLine("{0} {1} {2}", reader.GetString(0),
+    reader.GetDouble(1), reader.GetDateTime(2));
+}
+
+ IDataRecord has methods to get nearly every type of data from a data record, as well as indexers by column number or column name. With the indexer, the statement above could have been written as the following:
+
+Console.WriteLine("{0} {1} {2}",
+reader["coupon_code"],
+reader["discount_amount"],
+reader["date_redeemed"]);
+
+If you use the indexer, however, you do have to cast the object to whatever type you are expecting.
+
+Finally, it's always good to free up any resources you might have allocated:
+
+reader.Close( );
+connection.Close( );
+
+Although it's not strictly necessary to close the SqlDataReader, because it will be closed when the underlying DbConnection is closed, it is considered good form to go ahead and close it.
+
+Example 11-1 shows the complete program.
+
+Example 11-1. Program to print redeemed coupons
+Code View: Scroll / Show All
+using System;
+using System.Data.SqlClient;
+
+public class CouponPrinter {
+
+  public static void Main(string [ ] args) {
+    SqlConnection connection = new SqlConnection(
+      "Initial Catalog=AngusHardware; Integrated Security=SSPI; User ID=sa");
+
+    SqlCommand command = new SqlCommand(
+      "select coupon_code, total_discount, redemption_date " +
+      "from coupon_redemptions where redemption_date >= '11/7/2002' " +
+      "order by customer_id",
+      connection);
+
+    connection.Open( );
+
+    SqlDataReader reader = command.ExecuteReader( );
+
+    while (reader.Read( )) {
+      Console.WriteLine("{0} {1} {2}", reader.GetString(0),
+        reader.GetDouble(1), reader.GetDateTime(2));
+    }
+
+    reader.Close( );
+    connection.Close( );
+  }
+}
+
+11.1.2. Updating Data
+Like TextReader and XmlReader, DataReader provides a read-only, forward-only view of the underlying data stream. This means that updating a database requires a new IDbCommand and the ExecuteNonQuery( ) method, which I mentioned earlier.
+
+Example 11-2 shows a program to insert a new coupon into the database.
+
+Example 11-2. Program to insert a new coupon into a database
+Code View: Scroll / Show All
+using System;
+using System.Data.SqlClient;
+
+public enum DiscountType {
+  Percentage,
+  Fixed
+}
+
+public class AddCoupon {
+  public static void Main(string [ ] args) {
+    SqlConnection connection = new SqlConnection(
+      "Initial Catalog=AngusHardware; User ID=sa");
+
+    SqlCommand command = new SqlCommand(
+      "insert into coupons ( coupon_code, discount_amount, discount_type, expiration_date ) " +
+      "values ( '077GH', 15, " + (int)DiscountType.Percentage +
+      ", '11/30/2002' )", connection);
+
+    connection.Open( );
+
+    command.ExecuteNonQuery( );
+
+    connection.Close( );
+  }
+}
+
+The SqlCommand.ExecuteNonQuery( ) method simply executes the SQL command without expecting any values to be returned. If you're familiar with SQL, this insert statement should need no explanation.
+
+11.1.3. Building a SQL Command
+In the examples so far, I've built the SQL commands as simple text. There is another way that's more flexible. Of course, more flexibility usually involves more code.
+
+The basic concept is that an IDbCommand.Parameters property returns an IDataParameterCollection, which is a collection of IDataParameter instances. The IDataParameter interface's properties include the name of a parameter coded into the IDbCommand, and the value you wish to bind to that name. Look at the following code snippet for an example:
+
+SqlCommand command = new SqlCommand(
+  "insert into coupons ( coupon_code, discount_amount, " +
+  "discount_type, expiration_date ) " +
+  "values ( @coupon_code, @discount_amount, @discount_type, " +
+  "@expiration_date )", connection);
+
+command.Parameters.Add(new SqlParameter("@coupon_code", "665RQ"));
+command.Parameters.Add(new SqlParameter("@discount_amount", 15));
+command.Parameters.Add(new SqlParameter("@discount_type",
+  DiscountType.Percentage));
+command.Parameters.Add(new SqlParameter("@expiration_date ",
+  new DateTime(2002,11,30)));
+
+As you can see, the names of the parameters are embedded into the SQL command itself. Each parameter is then added to the IDataParameterCollection as a SqlParameter, with its name and value. The names I've used in this snippet match the names of the respective columns, with an @ prefixed; while the naming of the parameters is entirely up to you, the @ prefix is required.
+
+You can use the Parameters property on any IDbCommand, for any select, insert, update, or delete statement. There are other properties to the IDbParameter subclasses that pertain to the specific types of databases they know about.
+
+The major benefit of building an IDbCommand this way is that every parameter can be assigned dynamically, instead of having to hard-code the command by repeatedly appending strings. Another benefit is that type conversion is automatic, so you don't have to use the ToString( ) method or any sort of string formatting to get a value that the database will accept. Finally, most database servers actually run more efficiently when a query is built this way; the query does not need to be parsed again every time it is run again with different data values.
+
+Example 11-3 shows how both these benefits can be exploited in a rewritten version of the AddCoupon program from Example 11-2.
+
+Example 11-3. Program to insert a new coupon using parameters
+Code View: Scroll / Show All
+using System;
+using System.Data;
+using System.Data.SqlClient;
+
+public class AddCoupon {
+  public static void Main(string [ ] args) {
+    SqlConnection connection = new SqlConnection(
+      "Initial Catalog=AngusHardware; User ID=sa");
+
+    SqlCommand command = new SqlCommand(
+      "insert into coupons ( coupon_code, discount_amount, " +
+      "discount_type, expiration_date ) " +
+      "values ( @coupon_code, @discount_amount, " +
+      "@discount_type, @expiration_date )", connection);
+
+    SqlParameter couponCode = command.Parameters.Add(
+      new SqlParameter("@coupon_code", SqlDbType.Char));
+    SqlParameter discountAmount = command.Parameters.Add(
+      new SqlParameter("@discount_amount", SqlDbType.Decimal));
+    SqlParameter discountType = command.Parameters.Add(
+      new SqlParameter("@discount_type", SqlDbType.TinyInt));
+    SqlParameter expirationDate = command.Parameters.Add(
+      new SqlParameter("@expiration_date", SqlDbType.DateTime));
+
+    connection.Open( );
+
+    couponCode.Value = "99GGY";
+    discountAmount.Value = 5d;
+    discountType.Value = DiscountType.Percentage;
+    expirationDate.Value = new DateTime(2002,12,31);
+    command.ExecuteNonQuery( );
+
+    command.Parameters["@coupon_code"].Value = "81BIN";
+    command.Parameters["@discount_amount"].Value = 10d;
+    command.Parameters["@discount_type"].Value = DiscountType.Fixed;
+    command.Parameters["@expiration_date"].Value =
+      new DateTime(2003,1,31);
+    command.ExecuteNonQuery( );
+
+    connection.Close( );
+  }
+}
+
+This example shows two ways to deal with the SqlParameter objects. Each of the SqlParameter objects is created and added to the SqlCommand's Parameters property, which is a SqlParameterCollection. The Add( ) method returns the newly created SqlParameter, which is then assigned to a local variable.
+
+For the first execution of the SqlCommand, the SqlParameter instances are accessed by the local variables, and their values are assigned using the Value parameter. The SqlCommand.ExecuteNonQuery( ) method causes the SQL statement to be executed with those values.
+
+In the second SqlCommand execution, the SqlParameter instances are accessed by name using the SqlParameterCollection's indexer (the other indexer accesses a SqlParameter by its integer index). Then, like before, its Value is set and the SqlCommand is executed with those values.
+
+ XML and Databases > Manipulating Data Offline
+11.2. Manipulating Data Offline
+Despite all these classes, there are times when you won't want to write SQL for every database operation, and you'll want to be able to manipulate entire sets of data as a whole without maintaining an open database connection. The mechanism for such operations is the DataSet.
+
+A DataSet is an in-memory representation of a database. Just as a database contains tables, a DataSet contains a DataTableCollection (a collection of DataTable objects). Just as tables are related to one another, a DataSet contains a DataRelationCollection (a collection of DataRelation objects). Each DataTable contains a DataColumnCollection, which represents the table's columns, and a DataRowCollection, which represents the table's rows. The DataTable also contains references to various DataRelation and Constraint objects, which reflect the underlying table's relations and constraints. You can create a DataSet from scratch and fill it with data, or you can use an IDbDataAdapter to map a DataSet to a database.
+
+Figure 11-2 shows the structure of the DataSet class and its related classes.
+
+Figure 11-2. The DataSet object model
+
+Here's where the talk about the databases meets the subject of this book, XML. You can serialize the data and structure of a DataSet to XML. You can generate a DataSet subclass from an XML Schema. You can read data from a DataSet as if it were an XML document. And finally, you can use the DataSet to track changes to a database using the DiffGram, which is, you guessed it, an XML document.
+
+11.2.1. Creating a DataSet
+The most obvious way to create a DataSet is to construct each of its objects and add them to the appropriate collections. First, create a new instance of DataSet named "AngusHardware." The DataSet represents the entire database schema:
+
+DataSet dataSet = new DataSet("AngusHardware");
+
+Next, add a table named "customers" to the DataSet. The DataTableCollection.Add( ) method has several overloads; by passing a string parameter, you're creating a new DataTable with the given name, and adding it to the DataSet's Tables property. Add( ) returns the newly created DataTable, which you'll use to create columns:
+
+DataTable customers = dataSet.Tables.Add("customers");
+
+Next, add a column to the "customers" table. The DataColumnCollection.Add( ) method returns the newly created DataColumn, which you'll use in a minute to assign the primary key. This Add( ) method, like the one on DataTableCollection, has several overloads. The one used here simply takes the name of the database column and the Type of the data it contains:
+
+DataColumn customersCustomerId = customers.Columns.Add("customer_id",
+   typeof(long));
+
+The process is similar for each column. Note that some columns are nullable in the database and others are not; the AllowDBNull property indicates whether the column is nullable:
+
+customers.Columns.Add("name",typeof(string)).AllowDBNull = false;
+customers.Columns.Add("address1",typeof(string)).AllowDBNull = false;
+customers.Columns.Add("address2",typeof(string));
+customers.Columns.Add("address3",typeof(string));
+customers.Columns.Add("city",typeof(string)).AllowDBNull = false;
+customers.Columns.Add("state",typeof(string)).AllowDBNull = false;
+customers.Columns.Add("zip",typeof(string)).AllowDBNull = false;
+
+The last step for the "customers" table is to set the primary key, using the customersCustomerId DataColumn created a minute ago. Although this table has a simple, one-column primary key, the DataSet allows for concatenated primary keys via an array of DataColumn objects:
+
+customers.PrimaryKey = new DataColumn [ ] {customersCustomerId};
+
+A very similar process creates the "coupons" table:
+
+DataTable coupons = dataSet.Tables.Add("coupons");
+DataColumn couponCouponCode = coupons.Columns.Add("coupon_code",
+  typeof(string));
+coupons.Columns.Add("discount_amount",
+  typeof(Double)).AllowDBNull = false;
+coupons.Columns.Add("discount_type", typeof(int)).AllowDBNull = false;
+coupons.Columns.Add("expiration_date",
+  typeof(DateTime)).AllowDBNull = false;
+coupons.PrimaryKey = new DataColumn [ ] {couponCouponCode};
+
+And again for the "coupon_redemptions" table:
+
+Code View: Scroll / Show All
+DataTable couponRedemptions =
+  dataSet.Tables.Add("coupon_redemptions");
+DataColumn couponRedemptionsCouponCode =
+  couponRedemptions.Columns.Add("coupon_code", typeof(string));
+couponRedemptions.Columns.Add("total_discount", typeof(Double)).AllowDBNull = false;
+couponRedemptions.Columns.Add("redemption_date", typeof(DateTime)).AllowDBNull = false;
+DataColumn couponRedemptionsCustomerId =
+  couponRedemptions.Columns.Add("customer_id", typeof(long));
+
+Now that all the tables are created, it's time to assign the relations between them. The DataSet has a DataRelationCollection, whose Add( ) method has several overloads. The one used here takes the parent DataColumn and the child DataColumn. There are two relations in this example; one between coupons.coupon_code and coupon_redemptions.coupon_code, and one between customers.customer_id and coupon_redemptions.customer_id:
+
+dataSet.Relations.Add(couponCouponCode, couponRedemptionsCouponCode);
+dataSet.Relations.Add(customersCustomerId,
+  couponRedemptionsCustomerId);
+
+Finally, this line writes an XML Schema document that describes the DataSet to a file:
+
+dataSet.WriteXmlSchema("Coupons.xsd");
+
+The XML Schema that this program saved in Coupons.xsd is a normal XML Schema, and it can be used to recreate the DataSet in memory. The code to read in a DataSet's structure from a schema is very simple. In fact, it can be expressed succinctly in two statements:
+
+DataSet dataSet = new DataSet( );
+dataSet.ReadXmlSchema("Coupons.xsd");
+
+Example 11-4 shows the complete program that creates the DataSet for the coupon database, and saves an XML Schema for it.
+
+Example 11-4. Creating a DataSet for the coupon database
+Code View: Scroll / Show All
+using System;
+using System.Data;
+
+public class CreateDataSet {
+  public static void Main(string [ ] args) {
+
+    DataSet dataSet = new DataSet("AngusHardware");
+
+    DataTable customers = dataSet.Tables.Add("customers");
+    DataColumn customersCustomerId = customers.Columns.Add("customer_id",
+      typeof(long));
+    customers.Columns.Add("name",typeof(string)).AllowDBNull = false;
+    customers.Columns.Add("address1",typeof(string)).AllowDBNull = false;
+    customers.Columns.Add("address2",typeof(string));
+    customers.Columns.Add("address3",typeof(string));
+    customers.Columns.Add("city",typeof(string)).AllowDBNull = false;
+    customers.Columns.Add("state",typeof(string)).AllowDBNull = false;
+    customers.Columns.Add("zip",typeof(string)).AllowDBNull = false;
+    customers.PrimaryKey = new DataColumn [ ] {customersCustomerId};
+
+    DataTable coupons = dataSet.Tables.Add("coupons");
+    DataColumn couponCouponCode = coupons.Columns.Add("coupon_code",
+      typeof(string));
+    coupons.Columns.Add("discount_amount",
+      typeof(Double)).AllowDBNull = false;
+    coupons.Columns.Add("discount_type", typeof(int)).AllowDBNull = false;
+    coupons.Columns.Add("expiration_date",
+      typeof(DateTime)).AllowDBNull = false;
+    coupons.PrimaryKey = new DataColumn [ ] {couponCouponCode};
+
+    DataTable couponRedemptions =
+      dataSet.Tables.Add("coupon_redemptions");
+    DataColumn couponRedemptionsCouponCode =
+      couponRedemptions.Columns.Add("coupon_code", typeof(string));
+    couponRedemptions.Columns.Add("total_discount",
+      typeof(Double)).AllowDBNull = false;
+    couponRedemptions.Columns.Add("redemption_date",
+      typeof(DateTime)).AllowDBNull = false;
+    DataColumn couponRedemptionsCustomerId =
+      couponRedemptions.Columns.Add("customer_id", typeof(long));
+
+    dataSet.Relations.Add(couponCouponCode, couponRedemptionsCouponCode);
+    dataSet.Relations.Add(customersCustomerId,
+      couponRedemptionsCustomerId);
+
+    dataSet.WriteXmlSchema("Coupons.xsd");
+  }
+}
+
+11.2.2. Populating a DataSet
+The DataSet is now ready to use just as if you had created it procedurally. You can create new rows in each of its tables, using the DataTable.NewRow( ) and DataTable.Rows.Add( ) methods, as shown in Example 11-5.
+
+Example 11-5. Populating the DataSet
+using System;
+using System.Data;
+
+public class CreateData {
+  public static void Main(string [ ] args) {
+
+    DataSet dataSet = new DataSet( );
+    dataSet.ReadXmlSchema("Coupons.xsd");
+
+    DataTable couponsTable = dataSet.Tables["coupons"];
+
+    DataRow couponRow = couponsTable.NewRow( );
+    couponRow["coupon_code"] = "763FF";
+    couponRow["discount_amount"] = 0.5;
+    couponRow["discount_type"] = DiscountType.Fixed;
+    couponRow["expiration_date"] = new DateTime(2002,12,31);
+    couponsTable.Rows.Add(couponRow);
+
+    dataSet.WriteXml("Coupons.xml");
+  }
+}
+
+Some important highlights of this program are listed below. First, a new DataSet instance is created, and its structure is populated with the saved Coupons.xsd schema:
+
+DataSet dataSet = new DataSet( );
+dataSet.ReadXmlSchema("Coupons.xsd");
+
+Next, the "coupons" table is retrieved using the DataTableCollection's string indexer:
+
+DataTable couponsTable = dataSet.Tables["coupons"];
+
+You can only create a new row using the DataTable's NewRow( ) factory method. This is because the columns must be populated according to the database schema stored in the DataTable. Note that the NewRow( ) method does not actually add the new DataRow to the DataTable; that happens later:
+
+DataRow couponRow = couponsTable.NewRow( );
+
+Now you can access each column from the new DataRow and set its value:
+
+couponRow["coupon_code"] = "763FF";
+couponRow["discount_amount"] = 0.5;
+couponRow["discount_type"] = DiscountType.Fixed;
+couponRow["expiration_date"] = new DateTime(2002,12,31);
+
+Now that the DataRow is fully populated with data, it's time to add it to the DataTable's DataRowCollection. If some constraint or relation was not satisfied at this point, a specific DataException is thrown, giving details as to what constraint or relation was violated:
+
+couponsTable.Rows.Add(couponRow);
+
+Finally, the last line writes the entire DataSet to an XML file:
+
+dataSet.WriteXml("Coupons.xml");
+
+The Coupons.xml file generated by the last line is shown in Example 11-6. You can see that it's a normal XML file, and it is valid according to the schema in Coupons.xsd.
+
+Example 11-6. Coupons.xml file
+<?xml version="1.0" standalone="yes"?>
+<AngusHardware>
+  <coupons>
+    <coupon_code>763FF</coupon_code>
+    <discount_amount>0.5</discount_amount>
+    <discount_type>1</discount_type>
+    <expiration_date>2002-12-31T00:00:00.0000000-05:00</expiration_date>
+  </coupons>
+</AngusHardware>
+
+Remember, you can always verify that any XML file is valid according to a DTD or XML Schema with the XmlValidatingReader:
+
+XmlSchema schema  = XmlSchema.Read(
+  new FileStream("Coupons.xsd", FileMode.Open), null);
+
+XmlValidatingReader reader = new XmlValidatingReader(
+  new XmlTextReader("Coupons.xml"));
+reader.Schemas.Add(schema);
+reader.ValidationType = ValidationType.Schema;
+
+while (reader.Read( )) {
+  // this will throw an exception if invalid
+}
+
+You can also create an XML file that contains both the schema to define the DataSet structure and the data to populate it. The DataSet.WriteXml( ) method takes an additional optional parameter, an XmlWriteMode enumeration instance. The following list shows its values and what effect they have:
+
+DiffGram
+
+The output file contains a DiffGram, which is an XML format that specifies the differences between a DataSet in memory and the underlying database. I'll talk more about the DiffGram later:
+
+Code View: Scroll / Show All
+<?xml version="1.0" standalone="yes"?>
+<diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+  <AngusHardware>
+    <coupons diffgr:id="coupons1" msdata:rowOrder="0" diffgr:hasChanges="inserted">
+      ...
+    </coupons>
+  </AngusHardware>
+</diffgr:diffgram>
+
+IgnoreSchema
+
+Only the data are written to the output file. This is the default:
+
+<?xml version="1.0" standalone="yes"?>
+<AngusHardware>
+  <coupons>
+    ...
+  </coupons>
+</AngusHardware>
+
+WriteSchema
+
+The data and the schema are both written to the file:
+
+Code View: Scroll / Show All
+<?xml version="1.0" standalone="yes"?>
+<AngusHardware>
+  <xs:schema id="AngusHardware" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="AngusHardware" msdata:IsDataSet="true">
+      ...
+    </xs:element>
+  </xs:schema>
+  <coupons>
+    ...
+  </coupons>
+</AngusHardware>
+
+Reading a DataSet's structure and contents is done in a similar fashion. The DataSet.ReadXml( ) method takes an optional XmlReadMode enumeration parameter. The following lists its possible values and their effects:
+
+Auto
+
+If the data is a DiffGram, this is equivalent to XmlReadMode.DiffGram. If the DataSet already has a schema, or if the data has an inline schema (that is, it was written with XmlWriteMode.WriteSchema), this is equivalent to XmlReadMode.ReadSchema. Otherwise, it is equivalent to XmlReadMode.InferSchema.
+
+DiffGram
+
+The DiffGram is read and the changes are made to the DataSet in memory.
+
+Fragment
+
+The data is assumed to have come directly from a SQL Server FOR XML query.
+
+IgnoreSchema
+
+Any inline schema in the XML file is ignored, and the data are read into the DataSet's existing schema. Any data that do not fit the schema are discarded.
+
+InferSchema
+
+Any inline schema in the XML file is ignored. If the DataSet in memory already has a schema, the data are loaded and any necessary tables and columns are added to the schema. In case of a namespace clash between the DataSet's schema and the inferred schema, an exception is thrown.
+
+ReadSchema
+
+The inline schema in the XML file is read. If the DataSet in memory already has a schema, and new tables from the XML file are added, but an exception is thrown if any tables in the inline schema already exist in the DataSet.
+
+11.2.3. Generating a DataSet
+I said the generated schema is a normal XML Schema document, and it is. It does, however, contain a few extra attributes with the msdata prefix. These attributes help the XSD tool to generate a subclass of DataSet with convenience methods to access tables and columns in a more type-safe manner. After running the CreateDataSet program, execute this command:
+
+xsd /dataset Coupons.xsd
+
+ This is the same XSD tool that I introduced in Chapter 8.
+
+The resulting file, Coupons.cs, contains the class AngusHardware, which extends DataSet, as well as a number of support classes. It's a much more complex structure than the one we generated in Chapter 8 and Chapter 9, and with good reason; it is used to create a DataSet, not just to load XML data with XmlSerializer.
+
+You can see the benefit of the generated DataSet if you compare the code in Example 11-5 with that in Example 11-7.
+
+Example 11-7. Populating a DataSet generated by xsd
+using System;
+
+public class CreateData {
+  public static void Main(string [ ] args) {
+
+    AngusHardware dataSet = new AngusHardware( );
+
+    dataSet.coupons.AddcouponsRow(
+      "763FF", 0.5, (int)DiscountType.Fixed, new DateTime(2002,12,31));
+
+    dataSet.WriteXml("Coupons.xml");
+  }
+}
+
+The generated DataSet class contains members named after the tables and columns in the schema. To start with, the name of the main class, AngusHardware, reflects the name of the DataSet. Each DataTable of the DataSet is represented by a generated private class within the DataSet; the "coupons" table, for example, is represented by the generated class AngusHardware.couponsDataTable. The AngusHardware.coupons property provides direct access to the "coupons" DataTable instance. The AngusHardware.couponsDataTable class has a method called AddcouponsRow( ), whose parameters match the columns of the table in the order in which they were added.
+
+The object model for the generated AngusHardware Dataset is represented by Figure 11-3.
+
+Figure 11-3. Generated DataSet object model
+
+11.2.4. Connecting a DataSet to the Database
+I haven't yet shown you how to actually connect the DataSet to an actual database. This is achieved using the IDataAdapter interface, which serves as an intermediate layer between the database table and the DataSet. You specify the SQL commands to select, insert, update, and delete from each table, and then use the Fill( ) method to fill the DataSet with data from the database, or the Update( ) method to update the database with data from the DataSet.
+
+The first step is create a database connection, a SqlDataAdapter, and an AngusHardware DataSet:
+
+SqlConnection connection = new SqlConnection(
+  "Initial Catalog=AngusHardware; User ID=sa");
+SqlDataAdapter adapter = new SqlDataAdapter( );
+AngusHardware dataSet = new AngusHardware( );
+
+After that, you can create the select command for the SqlDataAdapter. This is the SqlCommand that will be used to populate the DataSet with data from the database:
+
+adapter.SelectCommand = new SqlCommand("SELECT coupon_code, " +
+  "discount_amount, discount_type, expiration_date FROM coupons",
+  connection);
+
+Because you'll be updating some of the data in this example and you would like those changes to be reflected in the database, the next step is to set the SqlDataAdapter's UpdateCommand property. Again, this is a normal SqlCommand, but unlike the SelectCommand it is necessary to add SqlParameters so that any updates get mapped to the correct columns:
+
+adapter.UpdateCommand = new SqlCommand(
+  "UPDATE coupons SET coupon_code = @couponCode, discount_amount = " +
+  "@discountAmount, discount_type = @discountType, expiration_date = " +
+  "@expirationDate WHERE coupon_code = @couponCode", connection);
+adapter.UpdateCommand.Parameters.Add("@couponCode",
+  SqlDbType.Char,10,"coupon_code");
+adapter.UpdateCommand.Parameters.Add("@discountAmount",
+  SqlDbType.Float,8,"discount_amount");
+adapter.UpdateCommand.Parameters.Add("@discountType",
+  SqlDbType.TinyInt,1,"discount_type");
+adapter.UpdateCommand.Parameters.Add("@expirationDate",
+  SqlDbType.DateTime,8,"expiration_date");
+
+ It's also possible to set the InsertCommand and DeleteCommand properties, but since you're only selecting and updating rows in this example, it's not necessary.
+
+With the SqlDataAdapter all set up, the Fill( ) method is used to fill the DataSet with data from the database using the SelectCommand. The second parameter to Fill( ) tells the SqlDataAdapter the name of the DataTable to fill with data; this name can differ from the name of the database table:
+
+adapter.Fill(dataSet, "coupons");
+
+Updating a row of data is a simple matter of locating the row of interest and setting its properties. Here we set the expiration date to the current date and time:
+
+dataSet.coupons[0].expiration_date = DateTime.Now;
+
+Since some of the data were changed, the SqlDataAdapter.Update( ) method causes the database to be updated with the changes currently in the DataSet:
+
+adapter.Update(dataSet, "coupons");
+
+Note that although in this case the DataSet was filled, modified, and updated within the span of a single database session, the operation could just as easily have spanned a larger time. The DataSet is a disconnected view of the database, which means that a connection need not be maintained while the data are modified.
+
+Example 11-8 shows the complete program.
+
+Example 11-8. Creating a DataSet with IDataAdapter
+Code View: Scroll / Show All
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+
+public class FillDataSet {
+
+  public static void Main(string [ ] args) {
+
+    SqlConnection connection = new SqlConnection(
+      "Initial Catalog=AngusHardware; User ID=sa");
+    SqlDataAdapter adapter = new SqlDataAdapter( );
+    AngusHardware dataSet = new AngusHardware( );
+
+    adapter.SelectCommand = new SqlCommand("SELECT coupon_code, " +
+      "discount_amount, discount_type, expiration_date FROM coupons",
+      connection);
+
+    adapter.UpdateCommand = new SqlCommand(
+      "UPDATE coupons SET coupon_code = @couponCode, discount_amount = " +
+      "@discountAmount, discount_type = @discountType, expiration_date = " +
+      "@expirationDate WHERE coupon_code = @couponCode", connection);
+    adapter.UpdateCommand.Parameters.Add("@couponCode",
+      SqlDbType.Char,10,"coupon_code");
+    adapter.UpdateCommand.Parameters.Add("@discountAmount",
+      SqlDbType.Float,8,"discount_amount");
+    adapter.UpdateCommand.Parameters.Add("@discountType",
+      SqlDbType.TinyInt,1,"discount_type");
+    adapter.UpdateCommand.Parameters.Add("@expirationDate",
+      SqlDbType.DateTime,8,"expiration_date");
+
+    adapter.Fill(dataSet, "coupons");
+
+    dataSet.coupons[0].expiration_date = DateTime.Now;
+
+    adapter.Update(dataSet, "coupons");
+  }
+}
+
+11.2.5. Tracking Changes to a DataSet
+When making changes to a DataSet, it is often useful to keep a record of the changes. That way you can make a set of related changes on the client machine, then transmit just the changes back to the server. This technique saves network time, because the changes are all transmitted at once, and it saves bandwidth, because only the changes are transmitted.
+
+You could add another line of code to Example 11-8 to see that the DataSet maintains a "before" and "after" view of the data. Add this line before the Update( ) statement:
+
+dataSet.WriteXml(Console.Out, XmlWriteMode.DiffGram);
+
+And you'll see the following output when you run the program:
+
+Code View: Scroll / Show All
+<diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:diffgr=
+"urn:schemas-microsoft-com:xml-diffgram-v1">
+  <AngusHardware>
+    <coupons diffgr:id="coupons1" msdata:rowOrder="0" diffgr:hasChanges="modified">
+      <coupon_code>077GH     </coupon_code>
+      <discount_amount>15</discount_amount>
+      <discount_type>0</discount_type>
+      <expiration_date>2002-11-09T14:17:41.6372544-05:00</expiration_date>
+    </coupons>
+    <coupons diffgr:id="coupons2" msdata:rowOrder="1">
+      <coupon_code>665RQ     </coupon_code>
+      <discount_amount>15</discount_amount>
+      <discount_type>0</discount_type>
+      <expiration_date>2002-11-30T00:00:00.0000000-05:00</expiration_date>
+    </coupons>
+    <coupons diffgr:id="coupons3" msdata:rowOrder="2">
+      <coupon_code>81BIN     </coupon_code>
+      <discount_amount>10</discount_amount>
+      <discount_type>1</discount_type>
+      <expiration_date>2003-01-31T00:00:00.0000000-05:00</expiration_date>
+    </coupons>
+    <coupons diffgr:id="coupons4" msdata:rowOrder="3">
+      <coupon_code>99GGY     </coupon_code>
+      <discount_amount>5</discount_amount>
+      <discount_type>0</discount_type>
+      <expiration_date>2002-12-31T00:00:00.0000000-05:00</expiration_date>
+    </coupons>
+  </AngusHardware>
+  <diffgr:before>
+    <coupons diffgr:id="coupons1" msdata:rowOrder="0">
+      <coupon_code>077GH     </coupon_code>
+      <discount_amount>15</discount_amount>
+      <discount_type>0</discount_type>
+      <expiration_date>2002-11-09T14:01:24.1830000-05:00</expiration_date>
+    </coupons>
+  </diffgr:before>
+</diffgr:diffgram>
+
+This is the DiffGram, and it shows the current state ("after") of the data in the DataSet, as well as a "before" state in the diffgr:before element.
+
+The DiffGram is an XML document that has three sections. The first, the current data instance, is represented by an XML element whose name matches the DataSet name; in this case, that's the AngusHardware element. Under the data instance element, the current state of each row in each of the DataSet's DataTables is serialized as a simple XML element.
+
+The second section, diffgr:before, lists the values of any rows that have changed before the change. And the third section, diffgr:errors, shows any errors that occurred during the generation of the DiffGram.
+
+Example 11-9 shows the general format of the DiffGram.
+
+Example 11-9. The DiffGram format
+Code View: Scroll / Show All
+<diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:diffgr=
+"urn:schemas-microsoft-com:xml-diffgram-v1">
+  <DataSetName>
+    <DataTableName diffgr:id="DataTableName
+1" msdata:rowOrder="0" diffgr:hasChanges="modified">
+      <DataColumnName>DataColumnValue
+</DataColumnName>
+      <DataColumnName>DataColumnValue
+</DataColumnName>
+      ...
+    </DataTableName>
+    <DataTableName diffgr:id="DataTableName
+2" msdata:rowOrder="1">
+      <DataColumnName>DataColumnValue
+</DataColumnName>
+      <DataColumnName>DataColumnValue
+</DataColumnName>
+      ...
+    </DataTableName>
+  </DataSetName>
+  <diffgr:before>
+    <DataTableName diffgr:id="DataTableName
+n" msdata:rowOrder="DataRown">
+      <DataColumnName>DataColumnValue
+</DataColumnName>
+      <DataColumnName>DataColumnValue
+</DataColumnName>
+      ...
+    </DataTableName>
+    ...
+  </diffgr:before>
+  <diffgr:errors>
+    <DataTableName diffgr:id="DataTableName
+n" diffgr:Error="ErrorText"/>
+    ...
+  </diffgr:errors>
+</diffgr:diffgram>
+
+The following details the DiffGram elements, attributes, and content:
+
+diffgr:diffgram
+
+This is the root element of the DiffGram. It uses two namespaces, prefixed with msdata and diffgr, respectively.
+
+DataSetName
+
+This element's name is the name of the DataSet. All the current values of each DataTable's DataRows are included within this element.
+
+DataTableName
+
+This element's name is the name of the DataTable, and the element represents an individual DataRow.
+
+DataColumnName
+
+This element represents a DataColumn within a single DataRow. Its content is the current value of the column for that row.
+
+diffgr:before
+
+This is the element that contains the previous values of any changed DataRows. Its content represents the previous value of a DataRow instance with the matching value of the DataTableName's diffgr:id attribute.
+
+diffgr:errors
+
+This is the element that contains any error messages. Its diffgr:Error attribute contains the error message for the DataRow instance with the matching value of the DataTableName's diffgr:id attribute.
+
+diffgr:id
+
+This attribute represents a unique identifier for a DataRow. Its content is made up of the DataTable name and a sequential number. It is used to map the current value of a DataRow to the previous value in the diffgr:before section or to any errors in the diffgr:errors section.
+
+msdata:rowOrder
+
+This attribute indicates the order of the DataRow within the DataTable.
+
+diffgr:hasChanges
+
+This attribute is used to indicate whether the current value of a DataRow represents any changes, in which case the previous values will be listed in the diffgr:before section. diffgr:hasChanges can have the value inserted, modified, or descent:
+
+inserted
+
+The value inserted identifies an element which has been added
+
+modified
+
+The value modified identifies an element that has been modified
+
+descent
+
+The value descent identifies an element where one or more children from a parent-child relationship have been modified
+
+diffgr:Error
+
+This attribute's content is a textual error message describing an error that arose while attempting to change the data in a DataSet.
+
+Although the DiffGram is used internally by .NET for remoting and web services, it can also be used by any external system that needs to communicate database changes to a .NET DataSet.
+
+ XML and Databases > Reading XML from a Database
+11.3. Reading XML from a Database
+In addition to writing the contents of a DataSet to an XML file, there are other ways to deal with a database's contents as XML. There are two general ways to do this: you can read the XML data directly, or you can read the data into a DOM tree.
+
+11.3.1. Reading XML Data Directly
+The SqlCommand class has another method that executes SQL queries, namely ExecuteXmlReader( ). ExecuteXmlReader( ) returns an instance of XmlReader that can be used to read the data.
+
+ExecuteXmlReader( ) is a method of SqlCommand and not OleDbCommand (or the IDbCommand interface) because it uses the SQL Server for xml clause. The result of such a query is XML, which can then be read using the XmlReader instance. Example 11-10 shows a program to read data using ExecuteXmlReader( ).
+
+ The XmlReader returned from ExecuteXmlReader( ) is actually of the type XmlTextReader, because the data returned from the query is a text stream.
+
+Example 11-10. Reading data using ExecuteXmlReader( )
+using System;
+using System.Data.SqlClient;
+using System.Xml;
+
+public class ReadDataAsXml {
+  public static void Main(string [ ] args) {
+    string command = "SELECT name, expiration_date, total_discount " +
+      "FROM coupons, coupon_redemptions, customers " +
+      "WHERE coupons.coupon_code = coupon_redemptions.coupon_code " +
+      "AND coupon_redemptions.customer_id = customers.customer_id " +
+      "FOR XML AUTO";
+
+    SqlCommand xmlCommand = new SqlCommand(command, connection);
+
+    connection.Open( );
+    XmlReader reader = xmlCommand.ExecuteXmlReader( );
+
+    XmlDocument doc = new XmlDocument( );
+    doc.Load(reader);
+    doc.Save(Console.Out);
+
+    connection.Close( );
+  }
+}
+
+ Like all XmlReader subclasses, the XmlReader returned from SqlCommand.ExecuteXmlReader( ) keeps the underlying data source open, which means that the SqlConnection remains open as long as the XmlReader is.
+
+The resulting XML document output to the console is shown here:
+
+<?xml version="1.0" encoding="IBM437"?>
+<customers name="Mark's Roofing">
+  <coupons expiration_date="2002-11-30T00:00:00">
+    <coupon_redemptions total_discount="2.150000000000000e+001" />
+    <coupon_redemptions total_discount="1.525000000000000e+001" />
+  </coupons>
+</customers>
+
+It already looks different from the DiffGram. First, all the column values are represented as XML attributes rather than elements. Second, the numeric data values are shown with full precision.
+
+ SQL Server has a lot of built-in XML functionality, including the for xml clause, but it's outside of the scope of this book. For more information on selecting XML data directly from a SQL Server database, see chapter 8 of AppliedXML Programming for Microsoft .NET by Dino Esposito (Microsoft Press).
+
+11.3.2. Reading Data Into a DOM Tree
+There's another way to read XML directly from a database. The XmlDataDocument, which extends XmlDocument, presents the contents of a DataSet as an XML document. At that point, the data can be treated just like any other XmlDocument, including navigating to specific nodes with XPath, writing it to any sort of Stream, transforming it with XSLT, and in fact any of the other techniques I've shown you in this book. Example 11-11 shows a program that executes the same query from example 11-10 and writes the resulting XML to the console.
+
+Example 11-11. Reading data as XML using XmlDataDocument
+Code View: Scroll / Show All
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Xml;
+
+public class ReadDataAsXml {
+  public static void Main(string [ ] args) {
+
+    DataSet dataSet = new DataSet("AngusHardware");
+
+    SqlConnection connection = new SqlConnection(
+      "Initial Catalog=AngusHardware; User ID=sa");
+
+    string command = "SELECT name, redemption_date, total_discount " +
+      "FROM coupon_redemptions a, customers b " +
+      "WHERE a.customer_id = b.customer_id";
+    SqlDataAdapter adapter = new SqlDataAdapter(command, connection);
+
+    adapter.Fill(dataSet, "CouponsRedeemed");
+
+    XmlDataDocument doc = new XmlDataDocument(dataSet);
+
+    XmlTextWriter writer = new XmlTextWriter(Console.Out);
+    writer.Formatting = Formatting.Indented;
+    doc.WriteTo(writer);
+  }
+}
+
+You've seen most of this before, but here's a quick look at some of the more important steps. First, you create the DataSet, the SqlConnection, a SQL select command, and the SqlDataAdapter:
+
+DataSet dataSet = new DataSet("AngusHardware");
+SqlConnection connection = new SqlConnection(
+  "Initial Catalog=AngusHardware; User ID=sa");
+string command = "SELECT name, redemption_date, total_discount " +
+  "FROM coupon_redemptions a, customers b " +
+  "WHERE a.customer_id = b.customer_id";
+SqlDataAdapter adapter = new SqlDataAdapter(command, connection);
+
+Next, you fill the adapter with data, naming the DataTable "CouponsRedeemed":
+
+adapter.Fill(dataSet, "CouponsRedeemed");
+
+Now, create an XmlDataDocument to wrap the DataSet. After this, doc is now ready to use, including all the base XmlDocument members:
+
+XmlDataDocument doc = new XmlDataDocument(dataSet);
+
+In this case, you can just use an XmlWriter to output the XmlDataDocument to the console:
+
+XmlTextWriter writer = new XmlTextWriter(Console.Out);
+writer.Formatting = Formatting.Indented;
+doc.WriteTo(writer);
+
+Other options include doing some sort of XPath query:
+
+XmlNodeList nodes = doc.SelectNodes("//total_discount");
+foreach (XmlElement element in nodes) {
+  Console.WriteLine("Total discount is {0}", element.InnerText);
+}
+
+Unlike the XmlReader, the DataSet is a disconnected view of the data in the database. Once the DataSet is populated, you won't use up a database connection, so you can do as much with the DataSet as you want. The flip side of that is that all the data are stored locally, so large databases can use a lot of local storage.
+
+ Another downside of the XmlDataDocument is that XPath queries are less efficient than SQL Server's built-in search capabilities. Use it wisely.
+
+ XML and Databases > Hierarchical XML
+11.4. Hierarchical XML
+XML that comes from a database, whether generated directly from a DataSet or through an XmlDataDocument, is inherently relational. That is, each table is represented by a single element, and its columns are represented by elements within it. Relations between tables are indicated by foreign key constraints and row identifiers. This makes perfect sense for relational data, but sometimes you might want to use a more hierarchical format.
+
+XML is ideal for representing hierarchical data, because it is itself a tree-oriented format. The data from the coupon database could easily be represented in a combination of relational hierarchical XML structures, as shown in Example 11-12.
+
+Example 11-12. Hierarchical representation of coupon database
+Code View: Scroll / Show All
+<AngusHardware>
+  <customers>
+    <customer_id>1</customer_id>
+    <name>Mark's Roofing</name>
+    <address1>99 Beltline Pkwy</address1>
+    <address2>Suite 100</address2>
+    <city>Wannaque</city>
+    <state>NH</state>
+    <zip>05461     </zip>
+  </customers>
+  <coupons>
+    <coupon_code>077GH     </coupon_code>
+    <discount_amount>15</discount_amount>
+    <discount_type>0</discount_type>
+    <expiration_date>2002-11-09T14:17:41.6370000-05:00</expiration_date>
+  </coupons>
+  <coupons>
+    <coupon_code>665RQ     </coupon_code>
+    <discount_amount>15</discount_amount>
+    <discount_type>0</discount_type>
+    <expiration_date>2002-11-30T00:00:00.0000000-05:00</expiration_date>
+    <coupon_redemptions>
+      <coupon_code>665RQ     </coupon_code>
+      <total_discount>21.5</total_discount>
+      <redemption_date>2002-11-10T00:00:00.0000000-05:00</redemption_date>
+      <customer_id>1</customer_id>
+    </coupon_redemptions>
+  </coupons>
+  <coupons>
+    <coupon_code>81BIN     </coupon_code>
+    <discount_amount>10</discount_amount>
+    <discount_type>1</discount_type>
+    <expiration_date>2003-01-31T00:00:00.0000000-05:00</expiration_date>
+  </coupons>
+  <coupons>
+    <coupon_code>99GGY     </coupon_code>
+    <discount_amount>5</discount_amount>
+    <discount_type>0</discount_type>
+    <expiration_date>2002-12-31T00:00:00.0000000-05:00</expiration_date>
+  </coupons>
+</AngusHardware>
+
+This differs from the straight relational output from the DataSet, shown in Example 11-13.
+
+Example 11-13. Relational representation of coupon database
+Code View: Scroll / Show All
+<AngusHardware>
+  <customers>
+    <customer_id>1</customer_id>
+    <name>Mark's Roofing</name>
+    <address1>99 Beltline Pkwy</address1>
+    <address2>Suite 100</address2>
+    <city>Wannaque</city>
+    <state>NH</state>
+    <zip>05461     </zip>
+  </customers>
+  <coupons>
+    <coupon_code>077GH     </coupon_code>
+    <discount_amount>15</discount_amount>
+    <discount_type>0</discount_type>
+    <expiration_date>2002-11-09T14:17:41.6370000-05:00</expiration_date>
+  </coupons>
+  <coupons>
+    <coupon_code>665RQ     </coupon_code>
+    <discount_amount>15</discount_amount>
+    <discount_type>0</discount_type>
+    <expiration_date>2002-11-30T00:00:00.0000000-05:00</expiration_date>
+  </coupons>
+  <coupons>
+    <coupon_code>81BIN     </coupon_code>
+    <discount_amount>10</discount_amount>
+    <discount_type>1</discount_type>
+    <expiration_date>2003-01-31T00:00:00.0000000-05:00</expiration_date>
+  </coupons>
+  <coupons>
+    <coupon_code>99GGY     </coupon_code>
+    <discount_amount>5</discount_amount>
+    <discount_type>0</discount_type>
+    <expiration_date>2002-12-31T00:00:00.0000000-05:00</expiration_date>
+  </coupons>
+  <coupon_redemptions>
+    <coupon_code>665RQ     </coupon_code>
+    <total_discount>21.5</total_discount>
+    <redemption_date>2002-11-10T00:00:00.0000000-05:00</redemption_date>
+    <customer_id>1</customer_id>
+  </coupon_redemptions>
+</AngusHardware>
+
+There is one major difference between the relational and hierarchical views. In the relational view, each row's elements are direct children of the root element. In the hierarchical view, however, the coupon_redemptions element is a child of the coupons element; because any coupon_redemptions row can only be related to exactly one coupons row, it makes sense to present them in this hierarchical fashion.
+
+How can you have the DataSet present this hierarchical XML view of the data? There are a couple of ways: transformation and synchronizing data.
+
+11.4.1. Transformation
+Because both the relational and hierarchical views are XML, one can be transformed into the other with an XSLT transformation. A program to transform the DataSet from one format to another is shown in Example 11-14.
+
+Example 11-14. Program to transform a DataSet to another XML format
+Code View: Scroll / Show All
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Xml;
+using System.Xml.Xsl;
+
+public class TransformData {
+  public static void Main(string [ ] args) {
+
+    DataSet dataSet = new DataSet("AngusHardware");
+
+    SqlConnection connection = new SqlConnection(
+      "Initial Catalog=AngusHardware; Integrated Security=SSPI; User ID=sa");
+
+    SqlDataAdapter customersAdapter = new SqlDataAdapter(
+      "SELECT * FROM customers", connection);
+    SqlDataAdapter couponsAdapter = new SqlDataAdapter(
+      "SELECT * FROM coupons", connection);
+    SqlDataAdapter couponRedemptionsAdapter = new SqlDataAdapter(
+      "SELECT * FROM coupon_redemptions", connection);
+
+    customersAdapter.Fill(dataSet, "customers");
+    couponsAdapter.Fill(dataSet, "coupons");
+    couponRedemptionsAdapter.Fill(dataSet, "coupon_redemptions");
+
+    XmlDataDocument doc = new XmlDataDocument(dataSet);
+
+    XmlTextWriter writer = new XmlTextWriter(Console.Out);
+    writer.Formatting = Formatting.Indented;
+
+    XslTransform transform = new XslTransform( );
+    transform.Load("Coupons.xsl");
+    transform.Transform(doc, null, writer);
+  }
+}
+
+You've seen most of this already at one point or another. The main variation that you have not seen yet is the inclusion of several SqlDataAdapter instances in the same DataSet. Once the DataSet is populated using each SqlDataAdapter's Fill( ) method, it's a simple matter to create an XmlDataDocument and an XslTransform. The XslTransform is loaded from the stylesheet Coupons.xsl, and the output goes to the console.
+
+The beauty of this approach is that it does any transformation that can be specified via an XSLT stylesheet. Example 11-15 shows an example of a stylesheet that does the transformation from relational XML to hierarchical XML. You could just as easily write one to produce an HTML or plain text view of the DataSet.
+
+Example 11-15. XSLT stylesheet to transform relational XML to hierarchical XML
+Code View: Scroll / Show All
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+  <xsl:output method="xml" />
+
+  <xsl:template match="/">
+    <xsl:apply-templates select="AngusHardware" />
+  </xsl:template>
+
+  <xsl:template match="AngusHardware">
+    <AngusHardware>
+      <xsl:apply-templates select="customers" />
+      <xsl:apply-templates select="coupons" />
+    </AngusHardware>
+  </xsl:template>
+
+  <xsl:template match="customers">
+    <xsl:copy-of select="." />
+  </xsl:template>
+
+  <xsl:template match="coupons">
+    <coupons>
+      <xsl:copy-of select="./coupon_code" />
+      <xsl:copy-of select="./discount_amount" />
+      <xsl:copy-of select="./discount_type" />
+      <xsl:copy-of select="./expiration_date" />
+      <xsl:variable name="coupon_code" select="./coupon_code" />
+      <xsl:if test="count(//coupon_redemptions[coupon_code=$coupon_code]) > 0">
+        <xsl:for-each select="//coupon_redemptions[coupon_code=$coupon_code]">
+          <xsl:copy-of select="." />
+        </xsl:for-each>
+      </xsl:if>
+    </coupons>
+  </xsl:template>
+
+</xsl:stylesheet>
+
+11.4.2. Synchronizing Data
+Take a look at the following code snippet:
+
+AngusHardware dataSet = new AngusHardware( );
+
+XmlDataDocument doc = new XmlDataDocument(dataSet);
+doc.Load("HierarchicalCoupons.xml");
+
+XmlTextWriter writer = new XmlTextWriter(Console.Out);
+writer.Formatting = Formatting.Indented;
+
+dataSet.WriteXml(writer);
+
+You've already seen code that uses this pattern It creates an instance of a DataSet, specifically the one we generated for the Angus Hardware coupon database. Then it loads the DataSet with data from an XML file by creating an XmlDataDocument for it. When the data is written to the console, it appears in a relational XML format.
+
+But if you change the last line, as shown below, you get hierarchical XML output that matches the format and content of the document you loaded into the XmlDataDocument:
+
+doc.WriteTo(writer);
+
+The XmlDataDocument knows how to map between the relational form of the DataSet and the hierarchical form of the document it's been loaded with, as long as the element names are the same. In fact, it handily ignores any elements it's not familiar with from the schema in the DataSet when it writes the relational XML.
+
+This is handy because you can read in XML from the hierarchical format and edit it using the DataSet, then output it back into the hierarchical XML. In other words, you can accomplish all the work this lengthy bit of DOM code does:
+
+dataSet.EnforceConstraints = false;
+XmlElement coupons = doc.CreateElement("coupons");
+doc.DocumentElement.AppendChild(coupons);
+
+XmlElement coupon_code = doc.CreateElement("coupon_code");
+coupon_code.AppendChild(doc.CreateTextNode("542HH"));
+coupons.AppendChild(coupon_code);
+
+XmlElement discount_amount = doc.CreateElement("discount_amount");
+discount_amount.AppendChild(doc.CreateTextNode("10"));
+coupons.AppendChild(discount_amount);
+
+XmlElement discount_type = doc.CreateElement("discount_type");
+discount_type.AppendChild(doc.CreateTextNode(
+  ((int)DiscountType.Percentage).ToString( )));
+coupons.AppendChild(discount_type);
+
+XmlElement expiration_date = doc.CreateElement("expiration_date");
+expiration_date.AppendChild(doc.CreateTextNode(
+  new DateTime(2003, 1, 31).ToString(
+  "yyyy-MM-ddT00:00:00.0000000-05:00")));
+coupons.AppendChild(expiration_date);
+dataSet.EnforceConstraints = true;
+
+with this single line of DataSet code:
+
+dataSet.coupons.AddcouponsRow("542HH", 10, 0, new DateTime(2003,1,31));
+
+I think you'd have to agree that that's worthwhile.

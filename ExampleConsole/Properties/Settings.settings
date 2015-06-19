@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Examples.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="UserStringValue" Type="System.String" Scope="User">
+      <Value Profile="(Default)">User String Setting</Value>
+    </Setting>
+    <Setting Name="AppStringValue" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">App String Setting</Value>
+    </Setting>
+    <Setting Name="UserIntValue" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">99</Value>
+    </Setting>
+    <Setting Name="AppIntValue" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">88</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

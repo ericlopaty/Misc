@@ -1,0 +1,1039 @@
+﻿ XML and Web Services > Defining Web Services
+Chapter 10. XML and Web Services
+Web Services is the buzz word that's making the rounds these days, and, in a way, it's probably the main reason you're reading this book at all. As you've seen, there are tons of XML support built into .NET, and it's all usable in any number of ways. But one of the ultimate goals of .NET's XML support is to enable Web Services.
+
+Web Services is a framework for building distributed applications. That means that Web Services, by itself, is not a distributed application, but it provides a mechanism by which you can implement a distributed application.
+
+ I sometimes have trouble deciding whether the term Web Services is singular or plural. I'll generally use the plural "Web Services," capitalized, as if it were singular, when I'm referring to the concept or mechanism, and the singular "web service," in lower case, when I'm talking about a particular application.
+
+I don't have room here to give a thorough explanation of building a distributed application using Web Services. However, what I can do is provide an overview of the concept, show you the XML schemas behind it, and demonstrate how you can use the .NET Framework to deal with those schemas.
+
+10.1. Defining Web Services
+In its working draft, "Web Services Architecture Requirements" (http://www.w3.org/TR/2002/WD-wsa-reqs-20020819), the W3C Web Services Working Group lists the following definition:
+
+A Web service is a software application identified by a URI, whose interfaces and bindings are capable of being defined, described, and discovered as XML artifacts. A Web service supports direct interactions with other software agents using XML based messages exchanged via Internet-based protocols.
+
+From this, you can isolate several key features of the Web Services architecture.
+
+A web service is a distributed software application.
+
+A web service is identifiable by a URI.
+
+A web service's interfaces and bindings are definable via XML.
+
+A web service's interfaces and bindings are describable via XML.
+
+A web service's interfaces and bindings are discoverable via XML.
+
+A web service communicates via XML messages.
+
+A web service communicates over Internet-based protocols.
+
+As you'll see later in this chapter, although all of these features are present in .NET, some of them are optional. In particular, the terms definable, describable, and discoverable are significant. As you'll see in a moment, three specific Web Services standards are responsible for the realization of these three features; they are W3C XML Schema, WSDL, and UDDI, respectively.
+
+Web Services is built on a variety of standards, some of which actually serve multiple purposes. You've already seen some of them in other parts of this book, and others will be introduced for the first time here.
+
+10.1.1. HTTP
+Most web services, although by no means all, use the Hypertext Transfer Protocol, or HTTP, as their transport mechanism. The reason for this goes back to the roots of Web Services.
+
+Web Services was conceived as a way to use the Internet, and specifically the World Wide Web, to perform more sophisticated tasks than it was originally intended for. The Web did support some rudimentary abilities to perform distributed processing via its Common Gateway Interface (CGI) protocol, but CGI was really intended to act as a gateway to other applications running on a web server or externally. Granted, these applications could do some interesting things, but their input was limited to HTTP POST or GET variables, and their output was limited to HTML or other formats that a web browser could interpret.
+
+Web Services grew out of the idea that input and output could both be specified in XML, and the processing could be done by an application other than a web server. To get around the firewalls that some corporations use to block other types of traffic, many web services use the Internet port reserved for HTTP traffic; in fact, Web Services communication is HTTP traffic.
+
+Although, as the W3C's definition makes explicit, a web service is uniquely addressable via a URI, a single web service may provide multiple functions. The actual function being invoked is determined at a higher-level protocol.
+
+10.1.2. XML
+XML is the basis for all the Web Services standards and protocols. Web Services uses XML as its language of choice because XML's strengths provide some very important Web Services features.
+
+XML provides a flexible, customizable format for structured data, meaning that many sorts of functions can be invoked, consuming and producing many sorts of data.
+
+XML can easily be transformed into an unlimited number of other formats, meaning that upstream processors need not be altered in order to use them in a Web Services environment.
+
+XML is license-free and platform independent, meaning that anyone can implement Web Services applications on any hardware platform without paying royalties.
+
+10.1.3. XML Schema
+XML Schema, which I introduced in Chapter 8, is used to define Web Services messages. The SOAP envelope, as you saw in Chapter 9, uses XML Schema types as the basis for its data encoding mechanism. XML Schema is also ideally suited for use in distributed applications because it guarantees that an XML request generated by a client will meet all the constraints required by the server that processes the request.
+
+10.1.4. SOAP
+SOAP, which I introduced in Chapter 9, is the serialization and messaging format used in .NET Web Services. As I also mentioned in Chapter 9, there are others, such as XML-RPC, but .NET does not support any other serialization formats natively.
+
+10.1.5. WSDL
+The Web Services Description Language, or WSDL, serves as a standard language for describing a particular web service. WSDL describes the public interface to a web service. Users of CORBA, another distributed application framework, may be familiar with Interface Definition Language (IDL); WSDL serves a similar function. In addition to describing the interface, WSDL also describes the binding of services to lower level protocols.
+
+The WSDL note is located at http://www.w3.org/TR/2002/WD-wsa-reqs-20020819.
+
+10.1.6. UDDI
+Universal Description, Discovery, and Integration, or UDDI, is the mechanism that provides for the discovery of available web services. The UDDI schema is fairly complex, and I'll describe it in detail—along with all the other relevant XML schemas—in the following section. In addition to the XML schema, UDDI includes the infrastructure necessary for web service discovery. Access to this infrastructure is itself implemented in the form of web services.
+
+The various UDDI specifications are located at http://www.uddi.org/specification.html. And the major players each have UDDI documentation available on their own web sites; for example, IBM has http://uddi.ibm.com/, and Microsoft has http://uddi.microsoft.com/.
+
+10.1.7. Where to Learn More About Web Services
+There are many new books about Web Services, some of them good. For a good introduction to Web Services, although a bit Java-centric, check out Web Services Essentials (O'Reilly), by Ethan Cerami. For a more .NET-oriented book, look at NET Web Services: Architecture and Implementation by Keith Ballinger (Addison Wesley). If you are developing your projects with Visual Studio .NET, you may want to read some of the later chapters of Building Web Services and .NET Applications, by Lonnie Wall and Andrew Lader (McGraw-Hill).
+
+ XML and Web Services > Using Web Services
+10.2. Using Web Services
+Using Web Services can be broken down into five distinct steps: choosing and implementing the Web Services provider, describing the web service, handling web service requests, creating web service clients, and publishing the web service.
+
+10.2.1. Choosing a Web Services Provider
+Before you begin developing your web service, you need to decide how you're going host it. You have several choices: ASP.NET and .NET Remoting are the easiest ones to choose, and I'll be focusing on ASP.NET in these examples, because it's the option that gives you the most flexibility.
+
+If you choose to serve your web services with ASP.NET, you need to be sure you have a web server capable of serving ASP.NET pages. IIS, the web server that ships with all Windows NT and Windows Server installations, will do just fine. However, if you're running on Windows XP personal workstation, you don't have a web server.Describing Web Services
+
+Sidebar 1. Using the Cassini Personal Web Server
+Although you could write your own ASP.NET host with the .NET Framework, Microsoft has developed a sample web server called Cassini, to demonstrate the .NET Framework's web hosting capabilities. Cassini is written in C#, and comes with source code. You can download it from http://www.asp.net/Projects/Cassini/Download/.
+
+After running cassini.exe to install Cassini, you can start it by double-clicking on the CassiniWebServer.exe icon. This will bring up the start screen shown in Figure 10-1.
+
+You can enter the application directory (where your ASP.NET and HTML files are stored), the port the server will run on, and the virtual root (the path that URLs will be relative to) in the screen. Then click the Start button to start the server. Figure 10-2 shows some possible settings for the Cassini web server.
+
+Alternately, you can start Cassini by typing the following command on the command line to start the server on port 80, mapping the URL http://localhost/dotNextAndXml/ to the directory named dotNetAndXml on your PC's C drive:
+
+CassiniWebServer C:\dotNetAndXml 80 /dotNetAndXml
+
+The Cassini web server will then start up and allow you to launch a web browser to the URL of the virtual root.
+
+You can choose to run the web server on any port, as long as that port is not already being served by another TCP/IP server. Port 80 is the standard HTTP port, so if you have another web server running already, you might try running Cassini on port 8080 instead.
+
+Now that you have the Cassini server running, you can launch a browser to see what's being served. Click on the link titled "Click To Browse" to launch Internet Explorer and take a look around.
+
+Figure 10-1. Cassini start screen
+
+Figure 10-2. Cassini Web Server settings
+
+A web service is described with a WSDL file. The following elements are involved in a WSDL document:
+
+definitions
+
+This is the root element of a WSDL document.
+
+types
+
+This optional element can be used to define the data types which are used to describe the messages exchanged by this service.
+
+message
+
+This element is used to describe the messages exchanged by this service. The message element may have any number of part sub-elements, each of which can represent an individual parameter to the message. In general, there will be two message elements for each combination of method and transport; one for the request and one for the response.
+
+portType
+
+This element is used to define a set of abstract operations. An abstract operation represents a single round-trip query and response, and gives it a name which will be used in the binding element. In general, there will be one portType element for each transport.
+
+binding
+
+This element is used to connect an abstract operation to its message and transport. Transports can include SOAP, HTTP GET, and HTTP POST. In general, there will be one binding element for each transport.
+
+service
+
+This element is used to map each portType to its binding, including a URL used to access the service.
+
+documentation
+
+This element is used to contain additional, human-readable information about the service. It may appear anywhere in the WSDL document, has a mixed content model, and may contain any number of any other element (xs:any in XML Schema).
+
+import
+
+This element is used to allow a WSDL document to include the contents of another.
+
+Now I'll build a relatively simple WSDL document, which describes an inventory query service which I'll introduce a little later. The XML prolog and document element are fairly uneventful, except for the large number of namespaces. The namespaces will be used for various purposes later in the document:
+
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+  xmlns:s="http://www.w3.org/2001/XMLSchema" 
+  xmlns:s0="http://angushardware.com" 
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" 
+  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+  targetNamespace="http://angushardware.com" 
+  xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+The types element defines three elements using XML Schema: GetNumberInStock, GetNumberInStockResponse, and int. These elements will all be scoped in the target namespace, http://angushardware.com. The first two are complex types which define the parameters and return values of the messages, and the last one is equivalent to the predefined xs:int type:
+
+Code View: Scroll / Show All
+<types>
+  <s:schema elementFormDefault="qualified" 
+     targetNamespace="http://angushardware.com">
+    <s:element name="GetNumberInStock">
+      <s:complexType>
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="productCode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:element>
+    <s:element name="GetNumberInStockResponse">
+      <s:complexType>
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="GetNumberInStockResult" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+    </s:element>
+    <s:element name="int" type="s:int" />
+  </s:schema>
+</types>
+
+The two messages are defined here. GetNumberInStockSoapIn is a SOAP version of the GetNumberinStock request message, and GetNumberInStockSoapOut is a SOAP version of the GetNumberInStockResponse response message:
+
+<message name="GetNumberInStockSoapIn">
+  <part name="parameters" element="s0:GetNumberInStock" />
+</message>
+<message name="GetNumberInStockSoapOut">
+  <part name="parameters" element="s0:GetNumberInStockResponse" />
+</message>
+
+This web service only supports a single operation, GetNumberInStock, so there is only one portType element. This element maps the GetNumberInStock operation to its SOAP input and output messages:
+
+<portType name="InventoryQuerySoap">
+  <operation name="GetNumberInStock">
+    <input message="s0:GetNumberInStockSoapIn" />
+    <output message="s0:GetNumberInStockSoapOut" />
+  </operation>
+</portType>
+
+The binding element associates the InventoryQuerySoap portType with the SOAP transport, and defines the GetNumberInStock operation as a SOAP message:
+
+Code View: Scroll / Show All
+<binding name="InventoryQuerySoap" type="s0:InventoryQuerySoap">
+  <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+  <operation name="GetNumberInStock">
+    <soap:operation soapAction="http://angushardware.com/GetNumberInStock" style="document" />
+    <input>
+      <soap:body use="literal" />
+    </input>
+    <output>
+      <soap:body use="literal" />
+    </output>
+  </operation>
+</binding>
+
+The service element describes the InventoryQuery service as being located at the URL http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx, using the InventoryQuerySoap binding:
+
+Code View: Scroll / Show All
+<service name="InventoryQuery">
+  <port name="InventoryQuerySoap" binding="s0:InventoryQuerySoap">
+    <soap:address location="http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx" />
+  </port>
+</service>
+
+Finally, as in all XML documents, the root element has to be closed:
+
+</definitions>
+
+That's it, the InventoryQuery web service is now fully described.
+
+Example 10-1 shows the complete WSDL document I built. It's not a very complicated schema, but its contents can be confusing. Don't worry, though; you'll very rarely have to create it by hand. You'll see in a moment how the .NET Framework creates one for you on demand.
+
+Example 10-1. WSDL document for InventoryQuery service
+Code View: Scroll / Show All
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+xmlns:s="http://www.w3.org/2001/XMLSchema" 
+xmlns:s0="http://angushardware.com" 
+xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" 
+xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+targetNamespace="http://angushardware.com" 
+  xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://angushardware.com">
+      <s:element name="GetNumberInStock">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="productCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNumberInStockResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetNumberInStockResult" 
+             type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="int" type="s:int" />
+    </s:schema>
+  </types>
+  <message name="GetNumberInStockSoapIn">
+    <part name="parameters" element="s0:GetNumberInStock" />
+  </message>
+  <message name="GetNumberInStockSoapOut">
+    <part name="parameters" element="s0:GetNumberInStockResponse" />
+  </message>
+  <portType name="InventoryQuerySoap">
+    <operation name="GetNumberInStock">
+      <input message="s0:GetNumberInStockSoapIn" />
+      <output message="s0:GetNumberInStockSoapOut" />
+    </operation>
+  </portType>
+  <binding name="InventoryQuerySoap" type="s0:InventoryQuerySoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <operation name="GetNumberInStock">
+      <soap:operation soapAction="http://angushardware.com/GetNumberInStock" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="InventoryQuery">
+    <port name="InventoryQuerySoap" binding="s0:InventoryQuerySoap">
+      <soap:address location="http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx" />
+    </port>
+  </service>
+</definitions>
+
+ The WSDL specification supported by .NET, currently at Version 1.1, is available at http://www.w3.org/TR/wsdl. It is technically a W3C Note, which means that it is only a submission to the W3C, and not an official recommendation or standard.
+
+10.2.2. Creating a Web Service
+At its simplest, creating a web service in .NET can be almost trivially easy. I'm going to start with a simple inventory query service. Example 10-2 shows the basic ASP.NET skeleton for such a service.
+
+Example 10-2. InventoryQuery.asmx source code
+<%@ WebService Language="C#" Class="InventoryQuery" %>
+
+using System.Web.Services;
+
+[WebService(Namespace="http://angushardware.com/InventoryQuery")]
+public class InventoryQuery : WebService {
+  [WebMethod]
+  public int GetNumberInStock(string productCode) {
+    return 0;
+  }
+}
+
+Let's break this skeleton down into its basic components.
+
+The presence of the @ WebService directive in a file with the .asmx extension tells the ASP.NET provider that the web service is located at InventoryQuery.asmx, that the web service's source code is written in C#, and that the implementation is in the class named InventoryQuery. The code could also be written in JScript .NET (JS) or Visual Basic .NET (VB). Additionally, the code could actually reside in a separate file, compiled into an assembly located in the .\Bin directory relative to the .asmx file:
+
+<%@ WebService Language="C#" Class="InventoryQuery" %>
+
+ There is no restriction on the name of the assembly containing the class that implements a web service, and multiple web services may exist in the same directory. However, if multiple assemblies in the .\Bin directory each contain a class with the name listed in an .asmx file, there is no guarantee which one will be used when that web service is invoked.
+
+The WebService attribute comes from the System.Web.Services namespace, and indicates that the class in question represents the implementation of a web service. The Namespace property sets the default namespace for the web service. The WebService attribute also has Name and Description properties, which allow you to set the public name of the web service, and give it a short textual description. The Name property defaults to the name of the class. A class that implements a web service does not actually need to have the WebService attribute; any class can implement a web service:
+
+using System.Web.Services;
+
+[WebService(Namespace="http://angushardware.com/")]
+
+ Although the Namespace property is optional, if you leave it off the ASP .NET provider will use http://tempuri.org/ as the default, and it will generate many strong hints that you should change the namespace.
+
+Web service implementations can extend the WebService type. The WebService type provides access to state information through its Application, Context, Server, Session, and User properties. Although extending WebService is not required for a web service implementation, I have chosen to do so in this example:
+
+public class InventoryQuery : WebService {
+
+ Although the names are the same, the WebService attribute and the WebService type are completely different beasts. If it helps you to keep the distinction clear, remember that while attribute names always end with Attribute, they also have an alias to the name without Attribute on the end. So the WebService attribute type is actually formally called WebServiceAttribute, whereas the WebService type is just called WebService.
+
+Finally, the GetNumberInStock method represents the InventoryQuery web service's GetNumberInStock message itself. Right now it will always return 0, since I've only created a stub method.
+
+The WebMethod attribute indicates that the method it is attached to implements a particular web service message. By default, the name of the message is the name of the method itself, although the WebMethod attribute has a MessageName property that allows you to override the name. WebMethod also has an optional Description property:
+
+[WebMethod]
+public int GetNumberInStock(string productCode) {
+  return 0;
+}
+
+ The WebMethod attribute is the only attribute that is absolutely required to implement a web service using ASP.NET. If no method within a class has the WebMethod attribute, the ASP.NET provider has no way of knowing what messages the web service supports.
+
+To see the InventoryQuery web service in action, make sure the InventoryQuery.asmx file is in C:\dotNetAndXml\ (or whatever directory you set as the application directory in your web server), and navigate your web browser to http://localhost/dotNetAndXml/InventoryQuery.asmx. You should see the page in Figure 10-3.
+
+Figure 10-3. Main screen of the InventoryQuery web service
+
+This HTML page is generated by the ASP.NET provider, based on the metadata included in the .asmx file and the class that implements the web service. If either the WebService attribute or the WebMethod attribute included a Description property, the descriptive text would be displayed here as well. If any more methods were exposed by attaching the WebMethod attribute to them, they would all be listed on this page as well.
+
+Clicking on the "Service Description" link opens a new window containing the WSDL file that the ASP.NET provider has automatically generated. Example 10-3 shows the generated WSDL for the InventoryQuery web service. Note the similarities to Example 10-1.
+
+Example 10-3. Generated WSDL for the InventoryQuery web service
+Code View: Scroll / Show All
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+xmlns:s="http://www.w3.org/2001/XMLSchema" 
+  xmlns:s0="http://angushardware.com"
+xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" 
+  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+targetNamespace="http://angushardware.com" 
+  xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://angushardware.com">
+      <s:element name="GetNumberInStock">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="productCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNumberInStockResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetNumberInStockResult" 
+             type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="int" type="s:int" />
+    </s:schema>
+  </types>
+  <message name="GetNumberInStockSoapIn">
+    <part name="parameters" element="s0:GetNumberInStock" />
+  </message>
+  <message name="GetNumberInStockSoapOut">
+    <part name="parameters" element="s0:GetNumberInStockResponse" />
+  </message>
+  <message name="GetNumberInStockHttpGetIn">
+    <part name="productCode" type="s:string" />
+  </message>
+  <message name="GetNumberInStockHttpGetOut">
+    <part name="Body" element="s0:int" />
+  </message>
+  <message name="GetNumberInStockHttpPostIn">
+    <part name="productCode" type="s:string" />
+  </message>
+  <message name="GetNumberInStockHttpPostOut">
+    <part name="Body" element="s0:int" />
+  </message>
+  <portType name="InventoryQuerySoap">
+    <operation name="GetNumberInStock">
+      <input message="s0:GetNumberInStockSoapIn" />
+      <output message="s0:GetNumberInStockSoapOut" />
+    </operation>
+  </portType>
+  <portType name="InventoryQueryHttpGet">
+    <operation name="GetNumberInStock">
+      <input message="s0:GetNumberInStockHttpGetIn" />
+      <output message="s0:GetNumberInStockHttpGetOut" />
+    </operation>
+  </portType>
+  <portType name="InventoryQueryHttpPost">
+    <operation name="GetNumberInStock">
+      <input message="s0:GetNumberInStockHttpPostIn" />
+      <output message="s0:GetNumberInStockHttpPostOut" />
+    </operation>
+  </portType>
+  <binding name="InventoryQuerySoap" type="s0:InventoryQuerySoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <operation name="GetNumberInStock">
+      <soap:operation soapAction="http://angushardware.com/GetNumberInStock" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <binding name="InventoryQueryHttpGet" type="s0:InventoryQueryHttpGet">
+    <http:binding verb="GET" />
+    <operation name="GetNumberInStock">
+      <http:operation location="/GetNumberInStock" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+  </binding>
+  <binding name="InventoryQueryHttpPost" type="s0:InventoryQueryHttpPost">
+    <http:binding verb="POST" />
+    <operation name="GetNumberInStock">
+      <http:operation location="/GetNumberInStock" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+  </binding>
+  <service name="InventoryQuery">
+    <port name="InventoryQuerySoap" binding="s0:InventoryQuerySoap">
+      <soap:address location="http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx" />
+    </port>
+    <port name="InventoryQueryHttpGet" binding="s0:InventoryQueryHttpGet">
+      <http:address location="http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx" />
+    </port>
+    <port name="InventoryQueryHttpPost" binding="s0:InventoryQueryHttpPost">
+      <http:address location="http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx" />
+    </port>
+  </service>
+</definitions>
+
+As you'll recall from the earlier discussion, the WSDL document provides a complete description of the web service, including all the supported messages, types, port types, bindings, and services. In this case, the ASP.NET provider automatically supports REST-style HTTP POST and GET methods as well as SOAP over HTTP POST.
+
+ There is an alternative style for web services known as Representational State Transfer, or REST. The basic premise of REST is that the HTTP methods GET, POST, PUT, and DELETE provide all the functionality needed to interact with any resources addressable by its URI. WSDL supports REST-based web services as well as SOAP and XML-RPC.
+
+The generated WSDL file in Example 10-3 contains more information than the one in Example 10-1. However, you can see that the only real difference is the inclusion of additional transports for HTTP GET and HTTP POST. The .NET Web Services provider creates these bindings, in addition to SOAP, automatically.
+
+Clicking on the "GetNumberInStock" link in Figure 10-3 will bring you to the page shown in Figure 10-4. This HTML page is also generated automatically by the ASP.NET Web Services provider.
+
+Figure 10-4. GetNumberInStock test page
+
+From this page, you can issue a request to the GetNumberInStock method of the InventoryQuery web service. Entering in a value—say, "803B"—and clicking the Invoke button causes the method to be invoked with the given parameter.
+
+This example uses the HTTP GET version of the web service, so the request that was actually sent to the web service provider used the following URL: http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx/GetNumberInStock?productCode=803B.
+
+Because right now the C# code always returns 0, the following response is always returned:
+
+<?xml version="1.0" encoding="utf-8" ?> 
+<int xmlns="http://angushardware.com">0</int>
+
+This would also be returned from the HTTP POST version. The SOAP request, however, would look quite a bit different. It would be sent with the following HTTP header and SOAP request envelope:
+
+Code View: Scroll / Show All
+POST /dotNetAndXml/InventoryQuery.asmx HTTP/1.1
+Host: 127.0.0.1
+Content-Type: text/xml; charset=utf-8
+Content-Length: 365
+SOAPAction: "http://angushardware.com/GetNumberInStock"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <GetNumberInStock xmlns="http://angushardware.com">
+      <productCode>803B</productCode>
+    </GetNumberInStock>
+  </soap:Body>
+</soap:Envelope>
+
+The HTTP response header and SOAP response envelope would be the following:
+
+Code View: Scroll / Show All
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: 400
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="
+http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <GetNumberInStockResponse xmlns="http://angushardware.com">
+      <GetNumberInStockResult>0</GetNumberInStockResult>
+    </GetNumberInStockResponse>
+  </soap:Body>
+</soap:Envelope>
+
+If you scroll a little further down the page in Figure 10-4, you'll see examples of requests and responses in all three versions of the web service.
+
+10.2.3. Issuing a Web Service Request
+You can use the .NET Framework's networking and XML classes to write code to issue web service requests and handle the responses quite easily. First, I'll show you how to write the code yourself; then I'll show you how to use the .NET Framework to generate the code for you.
+
+10.2.3.1. Issuing an HTTP GET request
+Once you have the InventoryQuery web service, it is possible to write a simple client that invokes the GetNumberInStock method over HTTP GET. Example 10-4 shows one possible implementation.
+
+Example 10-4. Program to access GetNumberInStock via HTTP GET
+using System;
+using System.IO;
+using System.Net;
+using System.Xml.XPath;
+
+public class GetNumberInStockHttpGet {
+
+  public static void Main(string [ ] args) {
+    WebRequest request = WebRequest.Create("http://127.0.0.1/dotNetAndXml
+    /InventoryQuery.asmx/GetNumberInStock?productCode=803B");
+    request.Method = "GET";
+
+WebResponse response = request.GetResponse( );
+    Stream stream = response.GetResponseStream( );
+
+    XPathDocument document = new XPathDocument(stream);
+    XPathNavigator nav = document.CreateNavigator( );
+
+    XPathNodeIterator nodes = nav.Select("//int");
+    Console.WriteLine(nodes.Current);
+  }
+}
+
+This example uses several classes you've seen before, including WebRequest, Stream, and XPathNavigator, to send a web service request to a URI and parse the response. If it doesn't look fairly intuitive at this point, I'd suggest reviewing Chapter 2 for a refresher on basic I/O, Chapter 4 for HTTP requests, and Chapter 6 for XPath.
+
+The response is formatted as XML, as you saw the web service tester generated:
+
+<?xml version="1.0" encoding="utf-8" ?> 
+<int xmlns="http://angushardware.com">0</int>
+
+Parsing this response is a simple matter with XPath.
+
+10.2.3.2. Issuing an HTTP POST request
+The HTTP POST request is almost identical to the HTTP GET request, except that rather than including parameter values in the URL, they are sent to the server in the content of the HTTP request. Example 10-5 shows a program which uses HTTP POST to invoke the GetNumberInStock method.
+
+Example 10-5. Program to access GetNumberInStock via HTTP POST
+Code View: Scroll / Show All
+using System;
+using System.IO;
+using System.Net;
+
+public class GetNumberInStockHttpPost {
+
+  public static void Main(string [ ] args) {
+    string content = "productCode=803B";
+
+    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(
+      "http://127.0.0.1:80/dotNetAndXml/InventoryQuery.asmx/GetNumberInStock");
+    request.Method = "POST";
+    request.ContentType = "application/x-www-form-urlencoded";
+    request.ContentLength = content.Length;
+
+    StreamWriter streamWriter = 
+      new StreamWriter(request.GetRequestStream( ));
+    streamWriter.Write(content);
+    streamWriter.Flush( );
+
+    WebResponse response = request.GetResponse( );
+    Stream stream = response.GetResponseStream( );
+
+    XPathDocument document = new XPathDocument(stream);
+    XPathNavigator nav = document.CreateNavigator( );
+
+    XPathNodeIterator nodes = nav.Select("//int");
+    Console.WriteLine(nodes.Current);
+  }
+}
+
+In Example 10-5, the content variable holds the content of the POST request, and the response to the request is the same as for Example 10-4. Note that the Content-Type header of the HTTP POST request must be set to application/x-www-form-urlencoded, which is the same encoding used for submitting forms in a web browser.
+
+The content of the POST request takes the form of name/value pairs, with the name of the variable, followed by a = character and its value. The name/value pairs are separated from each other with the & character. Each name and value is further encoded as follows:
+
+Any space characters are replaced with the + character.
+
+The reserved characters /, ?, :, @, = and & are escaped by replacing them with %HH, a percent sign and two hexadecimal digits representing the ASCII code of the character.
+
+10.2.3.3. Issuing a SOAP request
+Like the HTTP GET request, you can write a simple program to issue the SOAP request and handle the SOAP response. Example 10-6 shows one possible program to do this.
+
+Example 10-6. Program to generate GetNumberInStock request via SOAP
+Code View: Scroll / Show All
+using System;
+using System.IO;
+using System.Net;
+using System.Xml;
+
+public class GetNumberInStockSoap {
+
+  private const string soapNS = 
+    "http://schemas.xmlsoap.org/soap/envelope/";
+  private static readonly encoding = Encoding.UTF8;
+
+  public static void Main(string [ ] args) {
+    MemoryStream stream = new MemoryStream( );
+    XmlTextWriter writer = new XmlTextWriter(stream,encoding);
+
+    writer.WriteStartDocument( );
+    writer.WriteStartElement("soap","Envelope",soapNS);
+    writer.WriteStartElement("Body",soapNS);
+    writer.WriteStartElement("GetNumberInStock",angusNS);
+    writer.WriteElementString("productCode","803B");
+    writer.WriteEndElement( ); // GetNumberInStock
+    writer.WriteEndElement( ); // soap:Body
+    writer.WriteEndElement( ); // soap:Envelope
+    writer.WriteEndDocument( );
+    writer.Flush( );
+    stream.Seek(0,SeekOrigin.Begin);
+    StreamReader reader = new StreamReader(stream);
+    string soap = reader.ReadToEnd( );
+
+    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(
+      "http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx");
+      
+    request.Method = "POST";
+    request.ContentType = "text/xml; charset=" + encoding.HeaderName;
+    request.ContentLength = soap.Length;
+    request.Headers["SOAPAction"] = "http://angushardware.com/InventoryQuery/
+GetNumberInStock";
+
+    StreamWriter streamWriter = 
+      new StreamWriter(request.GetRequestStream( ));
+    streamWriter.Write(soap);
+    streamWriter.Flush( );
+
+    WebResponse response = request.GetResponse( );
+    Stream responseStream = response.GetResponseStream( );
+    XPathDocument document = new XPathDocument(responseStream);
+    XPathNavigator nav = document.CreateNavigator( );
+    XPathNodeIterator nodes = 
+      nav.Select("//Envelope/Body/GetNumberInStockResponse/GetNumberInStockResult");
+    Console.WriteLine(nodes.Current);
+  }
+}
+
+Example 10-6 bears a closer look. It consists of three major parts. The first part, shown here, creates the SOAP envelope using an XmlTextWriter instance wrapped around a MemoryStream, and stores it in a string variable named soap:
+
+MemoryStream stream = new MemoryStream( );
+XmlTextWriter writer = new XmlTextWriter(stream,encoding);
+
+writer.WriteStartDocument( );
+writer.WriteStartElement("soap","Envelope",soapNS);
+...
+writer.WriteEndElement( ); // soap:Envelope
+writer.WriteEndDocument( );
+writer.Flush( );
+stream.Seek(0,SeekOrigin.Begin);
+StreamReader reader = new StreamReader(stream);
+string soap = reader.ReadToEnd( );
+
+ The MemoryStream is necessary because the web services provider will only accept requests with UTF-8 encoding, and you can only set the encoding of an XmlTextWriter when passing a base Stream in the XmlTextWriter's constructor.
+
+The second part creates the HTTP request. I'll step through it in smaller chunks, below:
+
+HttpWebRequest request = (HttpWebRequest)WebRequest.Create(
+  "http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx");
+
+This line uses the WebRequest.Create( ) method to create an HTTP request for the URI http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx, which is the URI to which the InventoryQuery web service is bound:
+
+request.Method = "POST";
+
+A SOAP request can be sent over a variety of transports. However, an HTTP request must use the POST or PUT method in order to have content:
+
+request.ContentType = "text/xml; charset=" + encoding.HeaderName;
+
+A SOAP request must have XML content, and the character encoding rules must match that of the XML document. Since I created the XmlTextWriter by passing a Stream into the constructor, here I set the Content-Type header to text/xml and the same encoding I passed into the XmlTextWriter's constructor:
+
+request.ContentLength = soap.Length;
+
+When the HTTP request has content, the Content-Length header must be set to the length of the request's content:
+
+Code View: Scroll / Show All
+request.Headers["SOAPAction"] = "http://angushardware.com/InventoryQuery/GetNumberInStock";
+
+To complete the HTTP headers, I set the SOAPAction header so that the web service provider knows which method is being called. Note that some SOAP implementations may require quotes around the URI, although they are optional in .NET.
+
+The third part, shown below, extracts the returned value from the SOAP response, using a familiar XPathNavigator with the XPath query //Envelope/Body/GetNumberInStockResponse/GetNumberInStockResult, and writes the result to the console: 
+
+Code View: Scroll / Show All
+XPathDocument document = new XPathDocument(responseStream);
+XPathNavigator nav = document.CreateNavigator( );
+XPathNodeIterator nodes = nav.Select("//Envelope/Body/GetNumberInStockResponse/
+GetNumberInStockResult");
+Console.WriteLine(nodes.Current);
+
+10.2.4. Generating Client Code
+Of course, you shouldn't have to build HTTP or SOAP requests by hand. And indeed, you don't; the .NET Framework SDK includes a tool, wsdl.exe, which can generate web service client code from any WSDL file.
+
+Run the command line wsdl /language:vb http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx?WSDL to produce the Visual Basic .NET source code listed in Example 10-7 for the InventoryQuery service.
+
+Example 10-7. VB .NET client code for the InventoryQuery web service, using SOAP
+Code View: Scroll / Show All
+'------------------------------------------------------------------------------
+' <autogenerated>
+'     This code was generated by a tool.
+'     Runtime Version: 1.0.3705.288
+'
+'     Changes to this file may cause incorrect behavior and will be lost if 
+'     the code is regenerated.
+' </autogenerated>
+'------------------------------------------------------------------------------
+
+Option Strict Off
+Option Explicit On
+
+Imports System
+Imports System.ComponentModel
+Imports System.Diagnostics
+Imports System.Web.Services
+Imports System.Web.Services.Protocols
+Imports System.Xml.Serialization
+
+'
+'This source code was auto-generated by wsdl, Version=1.0.3705.288.
+'
+
+'<remarks/>
+<System.Diagnostics.DebuggerStepThroughAttribute( ),  _
+ System.ComponentModel.DesignerCategoryAttribute("code"),  _
+ System.Web.Services.WebServiceBindingAttribute(Name:="InventoryQuerySoap", 
+[Namespace]:="http://angushardware.com/InventoryQuery")>  _
+Public Class InventoryQuery
+    Inherits System.Web.Services.Protocols.SoapHttpClientProtocol
+    
+    '<remarks/>
+    Public Sub New( )
+        MyBase.New
+        Me.Url = "http://127.0.0.1/dotNetAndXml/InventoryQuery.asmx"
+    End Sub
+    
+    '<remarks/>
+    <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://angushardware.com/
+InventoryQuery/GetNumberInStock", RequestNamespace:="http://angushardware.com/
+InventoryQuery", ResponseNamespace:="http://angushardware.com/InventoryQuery", 
+Use:=System.Web.Services.Description.SoapBindingUse.Literal, 
+ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+    Public Function GetNumberInStock(ByVal productCode As String) As Integer
+        Dim results( ) As Object = Me.Invoke("GetNumberInStock", New Object( ) {productCode})
+        Return CType(results(0),Integer)
+    End Function
+    
+    '<remarks/>
+    Public Function BeginGetNumberInStock(ByVal productCode As String, ByVal callback As 
+System.AsyncCallback, ByVal asyncState As Object) As System.IAsyncResult
+        Return Me.BeginInvoke("GetNumberInStock", New Object( ) {productCode}, callback, asyncState)
+    End Function
+    
+    '<remarks/>
+    Public Function EndGetNumberInStock(ByVal asyncResult As System.IAsyncResult) As Integer
+        Dim results( ) As Object = Me.EndInvoke(asyncResult)
+        Return CType(results(0),Integer)
+    End Function
+End Class
+
+ Although SOAP is the default, wsdl.exe can also generate client code for HTTP GET and POST services. Use the command-line argument /protocol:HttpGet to generate the HTTP GET version, and /protocol:HttpPost to generate the HTTP POST version.
+
+I've used Visual Basic .NET for this example in part to emphasize the fact that a Web Services need not be written in the same language as the server. In reality, the client need not even be a Windows-based computer.
+
+Now that you've got the generated InventoryQuery proxy class, you can write a console application to use the proxy to call the web service. Example 10-8 shows one possible implementation in Visual Basic .NET.
+
+Example 10-8. Visual Basic .NET program to call the InventoryQuery proxy class
+Class InventoryQueryClient
+  Shared Sub Main(byVal args as String( ))
+    Dim query As InventoryQuery = New InventoryQuery( )
+    System.Console.WriteLine(query.GetNumberInStock(args(0)))
+  End Sub
+End Class
+
+To compile this code outside of Visual Studio .NET, you'll need to use the following command line:
+
+Code View: Scroll / Show All
+vbc.exe /reference:Microsoft.VisualBasic.dll /reference:System.dll /
+reference:System.Web.Services.dll /reference:System.Xml.dll InventoryQueryClient.vb InventoryQuery.vb
+
+This method of creating Web Services client code hides all the details of the XML and HTTP from you, although it still requires you to implement the web service code on the server side (unless you're creating a client for some third party's web service). Obviously, this is a much easier way to create Web Services client code.
+
+Although the parameter list and behavior are identical, the InventoryQuery proxy class generated by wsdl.exe is not the same class I wrote in Example 10-2. To clarify the difference, you can specify the namespace for the generated proxy class by including the /namespace argument on the wsdl.exe command line. Also remember that the .asmx file looks in its .\Bin subdirectory for the assembly containing the InventoryQuery class that it uses to serve requests.
+
+10.2.5. Building Requests with Remoting
+Even the automatically generated code requires you to write code specifically to serve web service requests. There is one more way to use Web Services to invoke methods across a distributed application. .NET Remoting puts together everything you've seen up to this point to form the very heart of .NET's distributed application framework.
+
+ Remoting refers to a specific form of Web Services that is tuned to work only between .NET applications. You should think of it as a form of Web Services, but not as fitting the purest definition of Web Services, because it depends on specific knowledge of the .NET typing system and assemblies.
+
+There are three major differences between .NET Remoting and the previous Web Services examples. First, although Web Services uses the ASP.NET provider as the web service host, Remoting can run within any .NET application. Second, Remoting does not provide a WSDL file for the service, instead relying on the fact that server and client code are written specifically to work with each other. Finally, Remoting uses the runtime form of SOAP serialization I introduced in Chapter 9 rather than the SOAP serialization that Web Services uses.
+
+The first step in implementing a Remoting server is to alter the InventoryQuery class from Example 10-2 as follows. As you'll see, the only difference is that I've removed the WebService and WebMethod attributes, and made InventoryQuery derive from MarshalbyRefObject:
+
+using System;
+
+public class InventoryQuery : MarshalByRefObject {
+  public int GetNumberInStock(string productCode) {
+    return 0;
+  }
+}
+
+The next step is to create a server to listen for requests to the InventoryQuery object. I'll call it InventoryQueryServer, and here's the code:
+
+using System;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Tcp;
+
+public class InventoryQueryServer {
+  public static void Main(string [ ] args) {
+    TcpChannel chan = new TcpChannel(8085);
+    ChannelServices.RegisterChannel(chan);
+
+    RemotingConfiguration.RegisterWellKnownServiceType(
+      Type.GetType("InventoryQuery"),
+      "GetNumberInStock", WellKnownObjectMode.Singleton);
+
+    System.Console.WriteLine("Hit return to exit...");
+    System.Console.ReadLine( );
+  }
+}
+
+This program simply registers the service and waits for client requests. All that's left now is to write the client code:
+
+using System;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Tcp;
+
+public class InventoryQueryRemotingClient {
+  public static void Main(string [ ] args) {
+    TcpChannel chan = new TcpChannel( );
+    ChannelServices.RegisterChannel(chan);
+
+    InventoryQuery query = (InventoryQuery)Activator.GetObject(
+      Type.GetType("InventoryQuery"),
+      "tcp://localhost:8085/GetNumberInStock");
+
+    Console.WriteLine(query.GetNumberInStock("803B"));
+  }
+}
+
+That's a fairly sketchy overview of the Remoting process, but that topic moves beyond this book's realm. Programming.NET Components by Juval Löwy (O'Reilly) covers the topic more thoroughly than I can here.
+
+10.2.6. Publishing a Web Service
+Once you have set up your server to host a web service, you need to inform potential clients of its existence. Additionally, you might want to access a web service published by someone else. These are both jobs for UDDI.
+
+ The UDDI specifications are maintained by OASIS, and as of this writing version 3.0 is available. However, I'll be referring to UDDI Version 2.04 in this chapter because Microsoft is currently only supporting the 1.x and 2.x releases of the specification.
+
+10.2.6.1. The UDDI data model
+The UDDI data model, described in an XML Schema, consists of five basic information elements. The following lists the elements of the UDDI document:
+
+businessEntity
+
+The businessEntity element represents information about an entity that has published information about its services; it need not be a business per se. A businessEntity is uniquely identified by a businessKey, which is a universally unique identifier (UUID). The businessEntity contains additional information, including the name, description, contacts, alternate discovery URLs, identifiers such as Dun & Bradstreet D-U-N-S® Number, and categorys such as ISO 3166 Geographic Taxonomy. The businessEntity element also contains the businessService elements. All name and description elements in the UDDI document may have an optional language specified by the xml:lang element.
+
+businessService
+
+The businessService element represents information about the web service published by a businessEntity. It has a serviceKey (UUID), and may be related back to its businessEntity by the businessKey. In addition to name, description, and category elements, each businessService element also contains bindingTemplate elements.
+
+bindingTemplate
+
+The bindingTemplate element indicates the address and access method for the web service. It is uniquely identified by its bindingKey. This element contains description and tModelInstanceDetails elements, as well as either an accessPoint or hostingRedirector element. Possible accessPoint bindings include mailto, http, https, ftp, fax, phone, and other.
+
+tModel
+
+The tModel, or technical model, element, indicates where the web service is documented. It is uniquely identified by its tModelKey. Possible documentation can include formal specifications such as a WSDL file, or a simple web page describing the service implementation.
+
+publisherAssertion
+
+The publisherAssertion element is used to indicate that two different businessEntities are in related in some way. Both businessEntities must make the same assertion, but with fromKey and toKey reversed. This element has no unique key; however, it can be uniquely identified by the concatenation of its elements: fromKey, toKey, and keyedReference.
+
+ The XML Schema for UDDI Version 2 is available online at http://www.uddi.org/schema/uddi_v2.xsd.
+
+10.2.6.2. The UDDI APIs
+Since UDDI is itself accessible as a web service, you can use .NET's tools to generate client code to access a UDDI registry. There are two SOAP APIs to access the UDDI registry: inquiry and publishing. I'll discuss inquiry first, and publishing in a moment.
+
+Inquiry involves searching the UDDI registry for a given business, service, or binding. After you find the information you're interested in, you need to get specific instances of UDDI registry objects. The Inquire API provides four methods to find entities and four to retrieve detailed information about a known entity. The following lists the find and get methods:
+
+find_binding
+
+Finds a particular binding within a particular business in the UDDI registry. Returns a bindingDetail.
+
+find_business
+
+Finds businesses in the UDDI registry. Returns a businessList.
+
+find_service
+
+Finds services within a particular business in the UDDI registry. Returns a serviceList.
+
+find_tModel
+
+Finds tModel structures in the UDDI registry. Returns a tModelList.
+
+get_bindingDetail
+
+Returns a bindingDetail message for a given bindingKey.
+
+get_businessDetail
+
+Returns a businessDetail message for a given businessKey.
+
+get_serviceDetail
+
+Returns a serviceDetail message for a given serviceKey.
+
+get_tModelDetail
+
+Returns a tModelDetail message for a given tModelKey.
+
+The UDDI Inquire API is described using WSDL at http://uddi.microsoft.com/inquire.asmx?WSDL, and the Publish API is at http://uddi.microsoft.com/publish.asmx?WSDL. You can use the wsdl tool to generate client code to access either of these services, and use the generated classes to find a business in the UDDI registry. The program in Example 10-9 finds any information for businesses whose names contain the string "bornstein".
+
+Example 10-9. Program to search the UDDI registry for business named "bornstein"
+using System;
+
+public class FindBornstein {
+  public static void Main(string[ ] args) {
+    InquireSoap inquireSoap = new InquireSoap( );
+    inquireSoap.Url = "http://test.uddi.microsoft.com/inquire";
+
+    name businessName = new name( );
+    businessName.Value = "bornstein";
+
+    find_business find = new find_business( );
+    find.name = new name [ ] { businessName };
+    find.generic = "2.0";
+
+    businessList businesses = inquireSoap.find_business(find);
+    for (int i = 0; i < businesses.businessInfos.Length; i++) {
+      businessInfo info = businesses.businessInfos[i];
+      Console.WriteLine("Business name: {0} ({2})", 
+        info.name[0].Value, info.name[0].lang);
+      Console.WriteLine("Business key: {0}", info.businessKey);
+    }
+  }
+}
+
+The classes generated by wsdl.exe may seem a bit convoluted, but it only generates the classes as needed by the UDDI Inquire API. The fact that there are a find_business( ) method and a find_business class reflect the fact that the SOAP message is itself an object. You instantiate a find_business object and then send it to the UDDI server with the find_business( ) method.
+
+Publishing a web service involves registering a service with the UDDI registry service. Again, there is an API whose methods you can call. The UDDI Publishing API can be broken down into three general areas: assertion, authorization, and others. The following describes the assertion methods of the UDDI Publishing API, which deal with the relationships between business entities:
+
+add_publisherAssertions
+
+Adds an assertion describing the relationship between two business entities.
+
+delete_publisherAssertions
+
+Removes an assertion describing the relationship between two business entities.
+
+get_publisherAssertions
+
+Gets the set of assertions made by a particular publisher.
+
+set_publisherAssertions
+
+Replaces the entire set of assertions made by a particular publisher.
+
+get_assertionStatusReport
+
+Gets a report on the status of all assertions made by a particular publisher.
+
+The authorization methods deal with authorization tokens. An authorization token represents a session between the UDDI registry operator and the client that is publishing information. get_registeredInfo is also included in this group:
+
+discard_authToken
+
+Makes an authorization token invalid. This method is used as a logout method.
+
+get_authToken
+
+Gets an authorization token from the UDDI registry site. This method is used as a login method.
+
+get_registeredInfo
+
+Gets all information managed by a given client.
+
+The remainder of the methods deal with creating and deleting the UDDI registry objects. For each object type (bindingTemplate, businessEntity, businessService, and tModel), there are corresponding save and delete methods:
+
+delete_binding
+
+Deletes a bindingTemplate for a businessService.
+
+save_binding
+
+Creates or updates a bindingTemplate for a businessService.
+
+delete_business
+
+Deletes a businessEntity from the registry.
+
+save_business
+
+Creates or updates a businessEntity.
+
+delete_service
+
+Deletes a businessService for a businessEntity.
+
+save_service
+
+Creates or updates a businessService for a businessEntity.
+
+delete_tModel
+
+Logically deletes a tModel. The tModel is still available for use, but is simply hidden from searches using the find_tModel method.
+
+save_tModel
+
+Creates or updates a tModel.
+
+These web service methods can be accessed just as any web service method, by generating a proxy class using the wsdl tool, or by adding a web reference to your project in Visual Studio .NET.
+
+The Microsoft UDDI registry is also available for interactive searching and publishing via an HTML front end. You can access the registry at http://uddi.microsoft.com.
+
+ It is important to note that you can only publish a web service on the Microsoft UDDI servers if you have registered at http://uddi.microsoft.com. Microsoft also operates a test UDDI server at http://test.uddi.microsoft.com.
+
+You can also set up your own UDDI server with Windows Server 2003.
+
+ XML and Web Services > Moving On
+10.3. Moving On
+One of the promises of Web Services is to provide access to vast stores of information in meaningful ways. Web sites have been building interfaces to database for years, but with XML and Web Services, that data can be marked up in machine-readable formats. In the next chapter, I'll talk about some of the other ways the .NET Framework uses XML to work with data in relational databases.
