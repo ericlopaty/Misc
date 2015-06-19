@@ -1,0 +1,1759 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<exam>
+  <title>70-433 TS: Microsoft SQL Server 2008, Database</title>
+  <questions>
+    <question number="1">
+      <type>single</type>
+      <text>
+        You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+        server named CERTKILLER-DB01 that hosts the Inventory database.
+        CertKiller.com has a user named Rory Allen has the SQL login rallen. Rory Allen was granted the
+        DELETE permissions to Stock table in the Inventory database.
+        How would you configure CERTKILLER-DB01 to revoke Rory Allen's SELECT permissions to the
+        Stock table without disrupting other permissions he has to the Inventory database?
+      </text>
+      <answer choice="A">A. By running the ADD USER rallen Transact-SQL statement.</answer>
+      <answer choice="B">B. By running the TRUNCATE Inventory.Stock FROM rallen Transact-SQL statement.</answer>
+      <answer choice="C">C. By running the DENY DELETE ON Inventory.Stock TO rallen Transact-SQL statement.</answer>
+      <answer choice="D">D. By running DELETE SELECT ON Inventory.Stock TO rallen Transact-SQL statement.</answer>
+      <key>C</key>
+    </question>
+    <question number="2">
+      <type>single</type>
+      <text>
+        You work as a network database administrator at CertKiller.com. Your boss, Cert Killer wants to
+        know on which columns unique constraints can be created.
+        What must you tell your boss?
+      </text>
+      <answer choice="A">A. On nvarchar(50) NULL or nvarchar(50) NOT NULL columns.</answer>
+      <answer choice="B">B. On nvarchar(50) SPARSE NULL and nchar(max) SPARSE NULL columns.</answer>
+      <answer choice="C">C. On nvarchar(max) NOT NULL and nvarchar(max) NULL columns.</answer>
+      <answer choice="D">D. On all of the above.</answer>
+      <key>A</key>
+    </question>
+    <question number="3">
+      <type>single</type>
+      <text>
+        You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+        server named CERTKILLER-DB01 which hosts the Inventory database.
+        CertKiller.com recently created a table named ItemsSold which lists the customers with their
+        discount ratings.
+        How can you configure CERTKILLER-DB01 to have customers who have made purchases before
+        granted 15% discount?
+      </text>
+      <answer choice="A">A. By using the WITH CHECK (Purchases = 0 AND Discount = 0.15) constraint.</answer>
+      <answer choice="B">B. By using the WITH CHECK (Purchases > 0 AND Discount 0.15) constraint.</answer>
+      <answer choice="C">C. By using the WITH CHECK ((Purchases = 0 AND Discount = 0) AND (Purchase < 0 AND Discount = 0.15)) constraint.</answer>
+      <answer choice="D">D. By using the WITH CHECK ((Purchases = 0 AND Discount = 0) OR (Purchase > 0 AND Discount = 0.15)) constraint.</answer>
+      <key>D</key>
+    </question>
+    <question number="4">
+      <type>single</type>
+      <text>
+        You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+        server named CERTKILLER-DB01 that hosts the Inventory database.
+        CertKiller.com has a Sales division which makes changes to the ItemSold and Stock tables of the
+        Inventory database.
+        How can the Inventory database be configured ensuring changes listed in the ItemSold table
+        corresponds to records in the Stock table?
+      </text>
+      <answer choice="A">A. By making use of the MERGE statement.</answer>
+      <answer choice="B">B. By making use of CLR triggers.</answer>
+      <answer choice="C">C. By making use of a Clustered Index and INNER JOIN constraints.</answer>
+      <answer choice="D">D. By making use of a Foreign key constraint.</answer>
+      <answer choice="E">E. By making use of a Unique constraint.</answer>
+      <key>D</key>
+    </question>
+    <question number="5">
+      <type>single</type>
+      <text>
+        You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+        server named CERTKILLER-DB01 that hosts the Retail database.
+        The Retail database has a table named Customers that has a column named Address. You need
+        to alter the Address column to enable users to query the column based on geographic location.
+        How would you alter the column?
+      </text>
+      <answer choice="A">A. By specifying the datetimeoffset data type.</answer>
+      <answer choice="B">B. By specifying the text data type.</answer>
+      <answer choice="C">C. By specifying the geography data type.</answer>
+      <answer choice="D">D. By specifying the user-defined type data type.</answer>
+      <key>C</key>
+    </question>
+    <question number="6">
+      <type>single</type>
+      <text>
+        You work as a network database administrator at CertKiller.com. CertKiller.com has a poorly
+        designed database with similar data stored in numerous tables. The tables use columns with
+        different data types. You need to collate these tables into a single table by using the SPARSE
+        option.
+        On which of the following can the SPARSE option be used?
+      </text>
+      <answer choice="A">A. On columns of the geography data type.</answer>
+      <answer choice="B">B. On columns of the varchar(max) data type.</answer>
+      <answer choice="C">C. On IDENTITY columns.</answer>
+      <answer choice="D">D. On columns with user-defined data types.</answer>
+      <answer choice="E">E. On NOT NULL columns.</answer>
+      <key>B</key>
+    </question>
+    <question number="7">
+      <type>single</type>
+      <text>
+        You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+        server named CERTKILLER-DB01 that hosts the Sales database. The Sales database has a table
+        named Shipping that has two columns that stored date data. You need to alter the table to be able
+        to store a customer's local time as well as specifying the difference between the customer's local
+        and UTC time.
+        How would you alter the table to store this data in one column?
+      </text>
+      <answer choice="A">A. By making use of the time data type.</answer>
+      <answer choice="B">B. By making use of the date data type.</answer>
+      <answer choice="C">C. By making use of the text data type.</answer>
+      <answer choice="D">D. By making use of the datetimeoffset data type.</answer>
+      <answer choice="E">E. By making use of the smalldatetime data type.</answer>
+      <key>D</key>
+    </question>
+    <question number="8">
+      <type>multiple</type>
+      <text>
+        You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+        server named CERTKILLER-DB01 that hosts the Inventory database.
+        CertKiller.com has a Finance division which utilizes two partitioned tables named TKSales and
+        TKProduction.
+        Which of the following methods should be used on the Inventory database to archive a partition of
+        TKSales to TKProduction? (Each correct option is part of the answer. Choose TWO.)
+      </text>
+      <answer choice="A">A. By making use of the ALTER DATABASE method.</answer>
+      <answer choice="B">B. By making use of the TRUNCATE method.</answer>
+      <answer choice="C">C. By making use of the JOIN method.</answer>
+      <answer choice="D">D. By making use of the INNERJOIN method.</answer>
+      <answer choice="E">E. By making use of the SWITCH method.</answer>
+      <key>A,E</key>
+    </question>
+    <question number="9">
+      <type>single</type>
+      <text>
+        You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+        server named CERTKILLER-DB01 that hosts the Inventory database. The Inventory database has
+        a table named ItemsSold.
+        You need to create a new table named WeekSales that stores that last week's data from the
+        ItemsSold table.
+        How should you go about creating the WeekSales table?
+      </text>
+      <answer choice="A">A. By creating a partition function with a FULL TEXT index for the WeekSales table.</answer>
+      <answer choice="B">B. By creating a partition function with a partition scheme before creating the WeekSales table.</answer>
+      <answer choice="C">C. By creating a partition scheme with a FULL TEXT index before creating the WeekSales table.</answer>
+      <answer choice="D">D. By using the TRUNCATE Inventory.ItemsSold command after creating one primary and secondary filegroup before creating the WeekSales table.</answer>
+      <key>B</key>
+    </question>
+    <question number="10">
+      <type></type>
+      <text>
+        You work as a network database administrator at CertKiller.com. Your boss, Cert Killer, wants to
+        know which stored procedures can be modified to utilize the WITH COMPILE option.
+        What would you tell your boss?
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <!--
+QUESTION NO: 10
+
+
+<answer choice="A">A. Ones that use the nvarchar(max) hint.</answer>
+<answer choice="B">B. Ones that use the WITH ENCRYPTION option.</answer>
+<answer choice="C">C. Ones that use the SPARSE NULL option.</answer>
+<answer choice="D">D. Ones that use the NTILE() hint.</answer>
+<answer choice="E">E. Ones that use the MAXDOP hint.</answer>
+<answer choice="F">F. By Ones that use the ORDER BY hint.</answer>
+
+Answer: B
+-->
+    <question number="11">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="12">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="13">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="14">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="15">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="16">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="17">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="18">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="19">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="20">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="21">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="22">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="23">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="24">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="25">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="26">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="27">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="28">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="29">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="30">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="31">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="32">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="33">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="34">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="35">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="36">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="37">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="38">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="39">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="40">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="41">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="42">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="43">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="44">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="45">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="46">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="47">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="48">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="49">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="50">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="51">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="52">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="53">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="54">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="55">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="56">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="57">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="58">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="59">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="60">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="61">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="62">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="63">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="64">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+    <question number="65">
+      <type></type>
+      <text>
+
+      </text>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+      <answer choice=""></answer>
+    </question>
+  </questions>
+
+
+<!--
+QUESTION NO: 11
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database.
+How would you create a stored procedure named GetSalesRep that uses input data passed by a
+parameter named @StaffID?
+
+<answer choice="A">A. By implementing the code: CREATE PROCEDURE GetSalesRep EXECUTE AS OWNER(@StaffID varchar (10))</answer>
+<answer choice="B">B. By implementing the code: CREATE PROCEDURE GetSalesRep EXECUTE AS CALLER(@StaffID varchar(15))</answer>
+<answer choice="C">C. By implementing the code: CREATE PROCEDURE GetSalesRep EXECUTE AS OWNER(@StaffID varchar(max) INPUT)</answer>
+<answer choice="D">D. By implementing the code: CREATE PROCEDURE GetSalesRep(@StaffID int)</answer>
+
+Answer: D
+-->
+<!--
+QUESTION NO: 12
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB02 hosting a database named Schedule. You need to determine if
+a given year is a leap year.
+How would you accomplish this?
+
+<answer choice="A">A. By using CLR triggers.</answer>
+<answer choice="B">B. By using Scalar-valued functions.</answer>
+<answer choice="C">C. By using system stored procedures.</answer>
+<answer choice="D">D. By creating a stored procedure which utilizes the HAVING COUNT clause.</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 13
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database. The Inventory database has
+a table named Stock that you must reference in a function that you are creating.
+How would you ensure that your function does not cause the Stock table to be dropped?
+
+<answer choice="A">A. You should consider making use of the MAXDOP option.</answer>
+<answer choice="B">B. You should consider making use of the WITH SCHEMABINDING option.</answer>
+<answer choice="C">C. You should consider making use of the SPARSE NULL option.</answer>
+<answer choice="D">D. You should consider making use of the EXECUTE AS OWNER clause.</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 14
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that runs an application named TKApp1.exe and hosts the
+Sales database. TKApp1.exe inserts data into a table named TotalSales in the Sales database.
+You need to add a NOT NULL column to the TotalSales table. How would you ensure that the new
+column does not prevent TKApp1.exe from inserting data into the TotalSales table?
+
+<answer choice="A">A. By using the WITH SCHEMABINDING option.</answer>
+<answer choice="B">B. By using an INSTEAD OF INSERT trigger.</answer>
+<answer choice="C">C. By using a CLR trigger.</answer>
+<answer choice="D">D. By using an EXECUTE AS OWNER trigger.</answer>
+<answer choice="E">E. By using an INSTEAD OF DELETE trigger</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 15
+
+You work as a network database administrator at CertKiller.com. You need to create several
+queries and functions that reference tables in the Inventory database.
+How would you prevent your queries and functions from resulting in tables being dropped?
+
+<answer choice="A">A. By creating a DDL trigger which utilizes ROLLBACK.</answer>
+<answer choice="B">B. By creating a CLR trigger which utilizes the MAXDOP hint.</answer>
+<answer choice="C">C. By creating a DML trigger which utilizes the nvarchar(max) hint.</answer>
+<answer choice="D">D. By creating a CLR trigger which utilizes EXECUTE AS OWNER.</answer>
+<answer choice="E">E. By creating a CLR trigger which utilizes the SPARSE NULL option.</answer>
+
+Answer: A
+-->
+<!--
+QUESTION NO: 16
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01. You need to configure a CLR assembly on CERTKILLERDB01
+that access an external database. The assembly does not use managed code.
+Which permission set should you assign to the assembly?
+
+<answer choice="A">A. The CONTROL permission set.</answer>
+<answer choice="B">B. The EXECUTE permission set.</answer>
+<answer choice="C">C. The READ permission set.</answer>
+<answer choice="D">D. The UNSAFE permission set.</answer>
+<answer choice="E">E. The MANAGED permission set.</answer>
+
+Answer: D
+-->
+<!--
+QUESTION NO: 17
+
+You work as a network database administrator at CertKiller.com. You need to implement error
+handling by using a TRY...CATCH block.
+How would you pass control to your CATCH block when an error is raised?
+
+<answer choice="A">A. By using a severity level of 2.</answer>
+<answer choice="B">B. By using a severity level of 4.</answer>
+<answer choice="C">C. By using a severity level of 8.</answer>
+<answer choice="D">D. By using a severity level of 16.</answer>
+
+Answer: D
+-->
+<!--
+QUESTION NO: 18
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database and transaction files. You
+notice that there are often blocking problems on the Inventory database. You discover that the
+blocking is caused by a SQL statement that operates in an isolation level set to repeatable read.
+How should you configure CERTKILLER-DB01 to reduce blocking whilst preventing dirty reads?
+
+<answer choice="A">A. By making use of the WRITE UNCOMMITTED transaction isolation level.</answer>
+<answer choice="B">B. By making use of the WRITE COMMITTED transaction isolation level.</answer>
+<answer choice="C">C. By making use of the SNAPSHOT transaction isolation level.</answer>
+<answer choice="D">D. By making use of the NON SERIALIZABLE isolation level transaction.</answer>
+
+Answer: C
+-->
+<!--
+QUESTION NO: 19
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database.
+You need to use an explicit transaction to execute a number of UPDATE statements that modifies
+existing data in the Inventory database.
+How would you be able to roll back changes if the transaction is unsuccessful?
+
+<answer choice="A">A. By making use of the INSTEAD OF DELETE trigger.</answer>
+<answer choice="B">B. By making use of the EXECUTE AS OWNER function.</answer>
+<answer choice="C">C. By making use of the INSTEAD OF INSERT trigger.</answer>
+<answer choice="D">D. By making use of the XACT_ABORT option.</answer>
+
+Answer: D
+-->
+<!--
+QUESTION NO: 20
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB02 hosting the Inventory database. The Inventory database has
+two tables named Sales and SalesRep that are related by a foreign key with the CASCADE
+DELETE option.
+How would have the records of the Sales table removed?
+
+<answer choice="A">A. By creating a Transact-SQL statement utilizing the ALTER TABLE Sales.</answer>
+<answer choice="B">B. By creating a Transact-SQL statement utilizing the DELETE FROM SalesRep.</answer>
+<answer choice="C">C. By creating a Transact-SQL statement utilizing the TRUNCATE DATABASE Inventory.</answer>
+<answer choice="D">D. By creating a Transact-SQL statement utilizing the INSTEAD OF DELETE.</answer>
+<answer choice="E">E. By creating a Transact-SQL statement utilizing the DELETE TOP Sales.</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 21
+
+You work as a network database administrator at CertKiller.com. You are developing a database
+for a Formula One (F1) team. The database must store the current time with a precision of up to
+storing ten microseconds every time a race car crosses the start/finish line.
+How would you record this data?
+
+<answer choice="A">A. By making use of the GETDATE function with the DEFUALT option.</answer>
+<answer choice="B">B. By making use of the SYSDATETIME system function with the DEFUALT option.</answer>
+<answer choice="C">C. By making use of the TODATETIMEOFFSET function with the DEFUALT option.</answer>
+<answer choice="D">D. By making use of the DATEPART function with the DEFUALT option.</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 22
+
+You work as a network database administrator at CertKiller.com. CertKiller has its headquarters in
+Miami and a Sales division in Los Angeles. You work at headquarters where you have developed
+a Products database. The Products table includes a column named Recorded with datetimeoffset
+data.
+How would you ensure that the Recorded column stores data relative to the time offset in Los
+Angeles?
+
+<answer choice="A">A. By making use of the CURRENT_TIMESTAMP function.</answer>
+<answer choice="B">B. By making use of the GETUTCDATE function.</answer>
+<answer choice="C">C. By making use of the SWITCHOFFSET function.</answer>
+<answer choice="D">D. By making use of the GETDATE function.</answer>
+
+Answer: C
+-->
+<!--
+QUESTION NO: 23
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a
+multipurpose server named CERTKILLER-SR01 that has two dual-core 2.66 GHz processors.
+CERTKILLER-SR01 hosts a SQL Server 2008 database named Inventory. You need to run a
+complicated query against the Inventory database but you don't want to slow down the server
+while the query runs.
+How would you ensure that the query only uses a single processor core?
+
+<answer choice="A">A. By utilizing the query hint (WITH SCHEMABINDING) to ensure no other queries are impacted.</answer>
+<answer choice="B">B. By utilizing the query hint (MAXDOP 1) to ensure no other queries are impacted.</answer>
+<answer choice="C">C. By utilizing the query hint PARAMETERIZATION FORCED to ensure no other queries are impacted.</answer>
+<answer choice="D">D. By utilizing the query hint OPTIMIZE FOR to ensure no other queries are impacted.</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 24
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database.
+CertKiller.com has a Development division responsible for creating updating and maintaining
+queries.
+How would the development division create a query which adds multiple rows to the Inventory
+database returning the first 25 rows quickly as possible?
+
+<answer choice="A">A. By making use of the PARAMETERIZATION FORCED query hint.</answer>
+<answer choice="B">B. By making use of the WITH SCHEMABINDING query hint.</answer>
+<answer choice="C">C. By making use of the MAXRECURSION query hint.</answer>
+<answer choice="D">D. By making use of the FAST 100 query hint.</answer>
+
+Answer: D
+-->
+<!--
+QUESTION NO: 25
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 which hosts the Inventory database.
+How should you created a query to utilizing ranking functions to display the sequential number of
+rows within a partition?
+
+<answer choice="A">A. By making use of the WITH SCHEMABINDING option.</answer>
+<answer choice="B">B. By making use of the OPTIMIZE FOR option.</answer>
+<answer choice="C">C. By making use of the ROW_NUMBER option.</answer>
+<answer choice="D">D. By making use of the MAXDOP option.</answer>
+
+Answer: C
+-->
+<!--
+QUESTION NO: 26
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database. You have not configured
+any MAPI clients but you need to implement a stored procedure that sends alerts by e-mail.
+How would you configure CERTKILLER-DB01 to send e-mail?
+
+<answer choice="A">A. By configuring Service Broker with the ROUTE CREATE option to map the route for sending email without a MAPI client.</answer>
+<answer choice="B">B. By making use of the sp_send_dbmail stored procedure for sending e-mail without a MAPI client.</answer>
+<answer choice="C">C. By configuring Service Broker with the SERVICE CREATE option.</answer>
+<answer choice="D">D. By making use of the ALTER SERVICE statement.</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 27
+
+You work as a network database administrator at CertKiller.com. The CertKiller.com network has a
+SQL Server 2008 database server named CERTKILLER-DB01 that hosts the Inventory database.
+The Inventory database has a Products table with a large Description column. You want to
+implement a full-text Search on the Description column but you want certain words to be ignored in
+the search results.
+Which of the following options should you use?
+
+<answer choice="A">A. You should make use of the Dictionary component.</answer>
+<answer choice="B">B. You should make use of the FreeText component.</answer>
+<answer choice="C">C. You should make use of the Stoplist component.</answer>
+<answer choice="D">D. You should make use of the Word Filter component.</answer>
+
+Answer: C
+-->
+<!--
+QUESTION NO: 28
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database.
+CertKiller.com recently requested that you configure Service Broker to handle messaging in the
+Inventory database. You have already created the message type, a contact and a queue.
+How would you complete the configuration?
+
+<answer choice="A">A. By configure Service Broker with the CREATE SERVICE option.</answer>
+<answer choice="B">B. By configure Service Broker with the ALTER QUEUE WITH ACTIVATION (EXECUTE AS OWNER) option.</answer>
+<answer choice="C">C. By configure Service Broker with the ALTER QUEUE WITH ACTIVATION (STATUS = ON) option.</answer>
+<answer choice="D">D. By enabling Service Broker with the ALTER DATABASE Inventory SET ENABLE_BROKER statement.</answer>
+
+Answer: A
+-->
+<!--
+QUESTION NO: 29
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database. The Inventory database
+makes use of a Service Broker to handle messaging through the use of a queue named TKQue.
+CERTKILLER-DB01 suffers a catastrophic failure and you restore the Inventory database to a
+server named TETKING-DB02. However, the TKQue does not resume messaging.
+How would you restore the functionality of the TKQue queue?
+
+<answer choice="A">A. By making use of the ALTER DATABASE Inventory CREATE CONTRACT; statement.</answer>
+<answer choice="B">B. By making use of the ALTER DATABASE Inventory CREATE SERVICE statement.</answer>
+<answer choice="C">C. By making use of the ALTER DATABASE Inventory SET NEW_BROKER; statement.</answer>
+<answer choice="D">D. By making use of the ALTER QUEUE WITH ACTIVATION (EXECUTE AS OWNER); statement.</answer>
+
+Answer: C
+-->
+<!--
+QUESTION NO: 30
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database.
+You have configured Service Broker to handle messaging in the Inventory database. The Service
+Broker is used by a third-party application named App.exe and by the CertKiller.com Web site.
+How would you configure the Service Broker to ensure that messages sent by the Web site are
+processed first?
+
+<answer choice="A">A. By making use of the ALTER QUEUE WITH ACTIVATION (EXECUTE AS OWNER); statement.</answer>
+<answer choice="B">B. By making use of the ALTER QUEUE; statement</answer>
+<answer choice="C">C. By making use of the CREATE BROKER PRIORITY; statement.</answer>
+<answer choice="D">D. By making use of the CREATE SERVICE; statement.</answer>
+
+Answer: C
+-->
+<!--
+QUESTION NO: 31
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a Microsoft
+SQL Server 2008 database server named CERTKILLER-DB01 that hosts the Inventory database.
+You want to use a table to track all changes made to the Inventory database.
+How would you accomplish this?
+
+<answer choice="A">A. By making use of Change Data Capture tracking.</answer>
+<answer choice="B">B. By making use of the CHANGETABLE function with the CHANGES argument.</answer>
+<answer choice="C">C. By making use of the CHANGE_TRACKING_CURRENT_VERSION function.</answer>
+<answer choice="D">D. By making use of the CHANGE_TRACKING_IS_COLUMN_IN_MASK function.</answer>
+
+Answer: A
+-->
+<!--
+QUESTION NO: 32
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 hosting a database named Inventory. The Inventory database
+has a few stored procedures that are used to insert XML data. However, the XML handles are not
+being cleared from memory.
+How would you configure CERTKILLER-DB01 to have the XML handles cleared from memory?
+
+<answer choice="A">A. By making use of the FOR BROWSE XML statement.</answer>
+<answer choice="B">B. By making use of the FOR XML EXPLICIT statement.</answer>
+<answer choice="C">C. By making use of the sp_delete_dns_namespace stored procedure.</answer>
+<answer choice="D">D. By making use of the sp_xml_removedocument stored procedure.</answer>
+<answer choice="E">E. By making use of the sp_xml_deletedocument stored procedure.</answer>
+
+Answer: D
+-->
+<!--
+QUESTION NO: 33
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01. CERTKILLER-DB01 that hosts the Inventory database. The
+Inventory database has a few stored procedures that are used to insert XML data based on
+different XML schemas. You have updated several of these stored procedures.
+How would you now check if any of the XML schemas are no longer required?
+
+<answer choice="A">A. By making use of the INFORMATION_SCHEMA.TABLES catalog view.</answer>
+<answer choice="B">B. By making use of the sys.column_xml_schema_collection_usages catalog view.</answer>
+<answer choice="C">C. By making use of the INFORMATION_SCHEMA.ROUTINES catalog view.</answer>
+<answer choice="D">D. By making use of the sys.sql_expression_dependencies catalog view.</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 34
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database. The Inventory database has
+a stored procedure that inserts and updates XML data. You have created and XML schema to
+ensure that the XML data is valid.
+How would you ensure that the XML schema is used?
+
+<answer choice="A">A. By making use of the CREATE FULL TEXT INDEX statement.</answer>
+<answer choice="B">B. By making use of the CREATE XML SCHEMA COLLECTION XMLValid statement.</answer>
+<answer choice="C">C. By making use of the CREATE CLUSTERED INDEX statement.</answer>
+<answer choice="D">D. By making use of the CREATE XML SCHEMA COLLECTION Valid statement.</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 35
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database. You are developing a query
+that will become part of a stored procedure. You want to analyze the query using a graphical
+execution plan.
+How would you create the execution plan using SQL Server Management Studio?
+
+<answer choice="A">A. By making use of the SET STATISTICS PROFILE ON; statement.</answer>
+<answer choice="B">B. By making use of the SET SHOWPLAN_XML ON; statement.</answer>
+<answer choice="C">C. By making use of the SET STATISTICS XML ON; statement.</answer>
+<answer choice="D">D. By making use of the SET SHOWPLAN_ALL ON; statement.</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 36
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database. You have developed a
+query that retrieves data from the Inventory database. You want to analyze the query by running
+an execution plan.
+How would you be able to save the execution plan in SQL Server Management Studio?
+
+<answer choice="A">A. By making use of the SET STATISTICS IO ON; statement.</answer>
+<answer choice="B">B. By making use of the SET STATISTICS TIME ON; statement.</answer>
+<answer choice="C">C. By making use of the SET SHOWPLAN_XML ON; statement.</answer>
+<answer choice="D">D. By making use of the SET FORCEPLAN ON; statement.</answer>
+
+Answer: C
+-->
+<!--
+QUESTION NO: 37
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database. You have developed a
+query that retrieves data from the Inventory database. You want to analyze the query by running
+an execution plan.
+How would you save the execution plan in SQL Server Management Studio?
+
+<answer choice="A">A. By saving the graphical execution plan as a .bmp file.</answer>
+<answer choice="B">B. By saving the graphical execution plan as a .log file.</answer>
+<answer choice="C">C. By saving the graphical execution plan as a .sqlplan file.</answer>
+<answer choice="D">D. By saving the graphical execution plan as a .trc file.</answer>
+<answer choice="E">E. By saving the graphical execution plan as a .txt file.</answer>
+
+Answer: C
+-->
+<!--
+QUESTION NO: 38
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database. You notice that there are
+often deadlocks on tables in the Inventory database. You receive instruction from CertKiller.com to
+capture information about the deadlocks to an XML file.
+How would you comply with this request?
+
+<answer choice="A">A. By making use of sp_trace_setevent.</answer>
+<answer choice="B">B. By making use of sys.dm_tran_locks.</answer>
+<answer choice="C">C. By making use of the Deadlock Graph event.</answer>
+<answer choice="D">D. By making use of the Lock:Acquired event.</answer>
+
+Answer: C
+-->
+<!--
+QUESTION NO: 39
+
+You work as a network database administrator at CertKiller.com. The CertKiller.com network
+contains a database server named CERTKILLER-DB01 which hosts the Inventory database. You
+have run the Database Engine Tuning Advisor (DTA) against a workload.
+How would you save the results from the DTA?
+
+<answer choice="A">A. By making use of the sp_trace_setevent system stored procedure.</answer>
+<answer choice="B">B. By making use of the Export Session Results function of the DTA.</answer>
+<answer choice="C">C. By making use of the Import Session Definition function of the DTA.</answer>
+<answer choice="D">D. By making use of the Import Session Results function of the DTA.</answer>
+<answer choice="E">E. By making use of the Export Session Definition function of the DTA.</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 40
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database. The Inventory database has
+several stored procedures. You want to optimize the indexing of the Inventory database for the
+stored procedures.
+Which of the following utilities should you run on CERTKILLER-DB01?
+
+<answer choice="A">A. By making use of SQL Server Management Studio.</answer>
+<answer choice="B">B. By making use of the Database Engine Tuning Advisor.</answer>
+<answer choice="C">C. By making use of the Export Session Definition function of DTA.</answer>
+<answer choice="D">D. By making use of the Import Session Definition function of DTA.</answer>
+
+Answer: B
+-->
+<!--
+QUESTION NO: 41
+
+You work as a network database administrator at CertKiller.com. Your boss, Cert Killer, wants to
+know which type of workload can be analyzed by the Database Engine Tuning Advisor.
+What would you reply?
+
+<answer choice="A">A. Profiler trace files, Transact-SQL scripts and XML files.</answer>
+<answer choice="B">B. Html files, Transact-SQL scripts and DTA files.</answer>
+<answer choice="C">C. Files with .log, .htm file and .xml file extensions.</answer>
+<answer choice="D">D. Files with .cfg, .php file and .txt file extensions.</answer>
+
+Answer: A
+-->
+<!--
+QUESTION NO: 42
+
+You work as a network database administrator at CertKiller.com. CertKiller.com has a database
+server named CERTKILLER-DB01 that hosts the Inventory database. A CertKiller.com user
+named Mia Hamm needs to check the indexes on the Inventory database. You need to grant Mia
+Hamm the required permissions to run the sys.dm_db_index_usage_stats query. You must ensure
+that Mia Hamm is not granted too much permissions.
+How would you accomplish this task?
+
+<answer choice="A">A. By assigning the EXECUTE WITH GRANT OPTION permissions to Mia Hamm.</answer>
+<answer choice="B">B. By assigning the SELECT permissions to Mia Hamm.</answer>
+<answer choice="C">C. By assigning the IMPERSONATE permissions to Mia Hamm.</answer>
+<answer choice="D">D. By assigning the VIEW SERVER STATE permissions to Mia Hamm.</answer>
+
+Answer: D
+-->
+<!--
+QUESTION NO: 43
+
+You work as a network database administrator at CertKiller.com. The CertKiller.com network
+makes use of Microsoft SQL Server 2008 as their database management solution. The
+CertKiller.com network contains a database server named CERTKILLER-DB01 which hosts the
+Inventory database. The Inventory database has several stored procedures that do not use
+dynamic SQL.
+How would you determine which tables are referred to by these stored procedures?
+
+<answer choice="A">A. By making use of the MAXRECURSION query hint.</answer>
+<answer choice="B">B. By making use of the PARAMETERIZATION FORCED query hint.</answer>
+<answer choice="C">C. By making use of the sys.sql_expression_dependencies catalog view.</answer>
+<answer choice="D">D. By making use of Change Data Capture tracking.</answer>
+
+Answer: C
+-->
+<!--
+QUESTION NO: 44
+
+You are a database developer on an instance of SQL Server 2008. Using data in your Employee
+table, you want to produce a report that displays employees grouped by department. The report
+should also meet the following requirements:
+* Within each department, employees must be ranked based on their YTDSalary value, with lower
+salaries being assigned a lower ranking.
+* If two employees within a department have identical salaries, they must be assigned the same
+ranking.
+* If two employees are assigned the same ranking, the next employee in the result set must be
+assigned the next sequential ranking value.
+Which ranking function should you use?
+
+<answer choice="A">A. ROW_NUMBER</answer>
+<answer choice="B">B. NTILE</answer>
+<answer choice="C">C. DENSE_RANK</answer>
+<answer choice="D">D. RANK</answer>
+
+Answer: C
+-->
+<!--
+QUESTION NO: 45
+
+You are a database developer on an instance of SQL Server 2008. You have the Employee and
+Department tables defined as follows:
+Which query should you use to produce a list of departments with more than two clerical
+assistants?
+
+<answer choice="A">A. SELECT DeptID FROM Employee WHERE JobName = 'Clerical Assistant' AND COUNT(*) > 2 GROUP BY DeptID;</answer>
+<answer choice="B">B. SELECT DeptName FROM Employee INNER JOIN Department ON Employee.DeptID = Department.DeptID GROUP BY DeptName HAVING JobName = 'Clerical Assistant' AND COUNT(*) > 2;</answer>
+<answer choice="C">C. SELECT DeptName FROM Employee INNER JOIN Department ON Employee.DeptID = Department.DeptID WHERE JobName = 'Clerical Assistant' GROUP BY DeptName HAVING EmpID > 2;</answer>
+<answer choice="D">D. SELECT DeptName FROM Employee INNER JOIN Department ON Employee.DeptID = Department.DeptID WHERE JobName = 'Clerical Assistant' GROUP BY DeptName HAVING COUNT(*) > 2;</answer>
+
+Answer: D
+-->
+<!--
+QUESTION NO: 46
+
+You are a database developer on an instance of SQL Server 2008 named Prod.
+Your Sales database contains the Order and OrderDetails tables queried by your OrderEntry
+application. You want to analyze existing indexes to identify and drop indexes that are rarely used.
+You do not want to receive recommendations to create new indexes.
+You create a workload, launch the Database Engine Tuning Advisor, and create a new tuning
+session.
+Which two tuning options should you use for the session? (Choose two.)
+
+<answer choice="A">A. Generate only online recommendations</answer>
+<answer choice="B">B. Evaluate utilization of existing PDS only</answer>
+<answer choice="C">C. Keep all existing PDS</answer>
+<answer choice="D">D. Do not keep any existing PDS</answer>
+
+Answer: B,D
+-->
+<!--
+QUESTION NO: 47
+
+You are a database developer on an instance of SQL Server 2008. Your Classes table is defined
+as follows:
+You have enabled change tracking in the database and executed the following statement:
+ALTER TABLE dbo.Classes
+ENABLE CHANGE_TRACKING
+WITH (TRACK_COLUMNS_UPDATED = ON);
+Which statement should you use to display the CourseID and CourseDescription values for rows
+that have been changed in the Classes table?
+
+<answer choice="A">A. SELECT CourseID FROM CHANGETABLE(CHANGES dbo.Classes);</answer>
+<answer choice="B">B. SELECT * FROM CHANGETABLE(CHANGES dbo.Classes, NULL) AS c;</answer>
+<answer choice="C">C. SELECT CourseID FROM CHANGETABLE(CHANGES dbo.Classes, NULL);</answer>
+<answer choice="D">D. SELECT c.CourseID, c2.CourseDescription FROM CHANGETABLE(CHANGES dbo.Classes, NULL) AS c JOIN dbo.Classes c2 ON c.CourseID = c2.CourseID;</answer>
+
+Answer: D
+-->
+<!--
+QUESTION NO: 48
+
+You work for a bank that uses a SQL Server 2008 database to store account and transaction
+information. The Accounts table contains several million rows. To reduce the impact of daily
+transactions on performance, all changes to account information during a day are recorded in
+several tables. For example, deposits to accounts are recorded in a Deposits table. The Accounts
+and Deposits tables are defined as follows:
+Customers may make several deposits to the same account on the same day. After business
+hours, the information from the Deposits table is used to update the Accounts table, and the
+Deposits table is then truncated.
+Which statement should you use to update the Accounts table?
+
+<answer choice="A">A. UPDATE Accounts a SET a.Balance = a.Balance + (SELECT SUM (Amount) FROM Deposits d WHERE a.AccountNo = d.AccountNo) WHERE a.AccountNo IN (SELECT AccountNo FROM Deposits);</answer>
+<answer choice="B">B. UPDATE Accounts SET Balance = Balance + (SELECT SUM (Amount) FROM Deposits d WHERE Accounts.AccountNo = d.AccountNo); </answer>
+<answer choice="C">C. UPDATE a SET Balance = Balance + d.Amount FROM Accounts a, Deposits d WHERE a.AccountNo = d.AccountNo;</answer>
+<answer choice="D">D. UPDATE a SET Balance = Balance + (SELECT SUM (Amount) FROM Deposits d WHERE a.AccountNo = d.AccountNo) FROM Accounts a WHERE a.AccountNo IN (Select AccountNo FROM Deposits);</answer>
+
+Answer: D
+-->
+<!--
+QUESTION NO: 49
+
+You are a database developer on an instance of SQL Server 2008. You have the following
+Transact-SQL:
+DECLARE @idoc int
+DECLARE @XmlDoc nvarchar(1000)
+SET @XmlDoc = N'<root>
+    <Customer CustomerID="23">
+      <Orders>
+        <Order OrderID="11" OrderDate="-20080-805" Amount="450.00">
+          <OrderLine ProductID="2" Quantity="11" />
+          <OrderLine ProductID="7" Quantity="45" />
+        </Order>
+        <Order OrderID="35" OrderDate="-20090-814" Amount="825.00">
+          <OrderLine ProductID="14" Quantity="100" />
+          <OrderLine ProductID="12" Quantity="32" />
+        </Order>
+      </Orders>
+    </Customer>
+    <Customer CustomerID="47">
+      <Orders>
+        <Order OrderID="29" OrderDate="-20080-811" Amount="362.75">
+          <OrderLine ProductID="3" Quantity="14" />
+          <OrderLine ProductID="7" Quantity="12" />
+        </Order>
+        <Order OrderID="32" OrderDate="-20090-806" Amount="684.00">
+          <OrderLine ProductID="11" Quantity="16" />
+          <OrderLine ProductID="5" Quantity="17" />
+        </Order>
+      </Orders>
+    </Customer>
+  </root>'
+  You execute the following Transact-SQL:
+  EXEC sp_xml_preparedocument @idoc OUTPUT, @XmlDoc
+  SELECT * INTO dbo.CustomerOrders
+  FROM
+  OPENXML(@idoc, 'root/Customer', 1)
+  WITH
+  (CustomerID int,
+  Orders xml 'Orders');
+  EXEC sp_xml_removedocument @idoc;
+  What is the result?
+
+  <answer choice="A">A. One row per customer is inserted into the CustomerOrders table.</answer>
+  <answer choice="B">B. One row per customer order is inserted into the CustomerOrders table.</answer>
+  <answer choice="C">C. One row per order line is inserted into the CustomerOrders table.</answer>
+  <answer choice="D">D. The statement fails because you cannot include an xml data type column in the WITH clause when using OPENXML.</answer>
+
+  Answer: A
+-->
+  <!--
+  QUESTION NO: 50
+
+  You are a database developer on an instance of SQL Server 2008. You monitor SQL Server
+  Access Methods:
+  Page Splits/sec and notice that an excessive number of page splits are occurring in your
+  database. Further investigation finds that one of your tables is experiencing many page splits. The
+  table has one clustered index defined.
+  What should you do?
+
+  <answer choice="A">A. Drop the table and re-create it.</answer>
+  <answer choice="B">B. Use the sp_configure system stored procedure to set the fill factor option to a lower value.</answer>
+  <answer choice="C">C. Rebuild the table's index decreasing the fill factor.</answer>
+  <answer choice="D">D. Issue an ALTER TABLE statement for the table that includes the REBUILD WITH clause.</answer>
+
+  Answer: C
+-->
+  <!--
+  QUESTION NO: 51
+
+  You are a database developer on an instance of SQL Server 2008. You are experiencing
+  problems with the response time of queries. To investigate the root of the problem, you execute
+  the following Transact-SQL query:
+  SELECT wait_type, wait_time_ms
+  FROM sys.dm_os_wait_stats
+  ORDER BY wait_time_ms;
+  You notice a high wait_time_ms value for the IO_COMPLETION wait type.
+  What does this indicate?
+
+  <answer choice="A">A. a CPU bottleneck</answer>
+  <answer choice="B">B. a disk bottleneck</answer>
+  <answer choice="C">C. a deadlock situation</answer>
+  <answer choice="D">D. an insufficient amount of allocated virtual memory</answer>
+
+  Answer: B
+-->
+  <!--
+  QUESTION NO: 52
+
+  You are a database developer on an instance of SQL Server 2008. When a user wants to make a
+  flight reservation, your application will first query the database and return the list of available seats
+  on the appropriate flights. The user will then choose a suitable flight and purchase a ticket. After
+  the user has chosen a date, a flight, and a seat and has initiated the purchase, no other user
+  should be able to choose the same seat on the same flight on the same date. The application
+  should not lock seats for more time than is reasonably necessary.
+  Which transaction isolation level should you configure the application to use?
+
+  <answer choice="A">A. REPEATABLE READ</answer>
+  <answer choice="B">B. READ COMMITTED</answer>
+  <answer choice="C">C. SERIALIZABLE</answer>
+  <answer choice="D">D. READ UNCOMMITTED</answer>
+
+  Answer: A
+-->
+  <!--
+  QUESTION NO: 53
+
+  You are the designer of a SQL database on an instance of SQL Server 2008. You have a
+  Products table that contains the ProdID, ProdName, ProdDesc, and ProdAltDesc columns. You
+  issue the following statement:
+  ALTER TABLE Products DROP COLUMN ProdDesc, ProdAltDesc;
+  What is the result?
+
+  <answer choice="A">A. The ProdDesc and ProdAltDesc columns, including all data contained in these columns, are permanently removed from the Products table.</answer>
+  <answer choice="B">B. The ProdDesc and ProdAltDesc columns are retained in the Products table, but are assigned a NULL value.</answer>
+  <answer choice="C">C. The ProdDesc and ProdAltDesc columns are marked for deletion.</answer>
+  <answer choice="D">D. An error is generated because only one column can be specified in the DROP COLUMN clause.</answer>
+
+  Answer: A
+-->
+  <!--
+  QUESTION NO: 54
+
+  You are a database developer on an instance of SQL Server 2008. You have the Personnel table
+  defined as follows:
+  For each employee, the ManagerID column contains the EmployeeID of the employee's manager.
+  You execute the following statement:
+  SELECT p.EmployeeID, p2.FirstName, p2.LastName
+  FROM Personnel p LEFT JOIN Personnel p2
+  ON p.ManagerID = p2.EmployeeID;
+  What is the result?
+
+  <answer choice="A">A. The statement displays only the employees who are also managers.</answer>
+  <answer choice="B">B. The statement displays each employee's manager.</answer>
+  <answer choice="C">C. The statement fails because the FROM clause is invalid.</answer>
+  <answer choice="D">D. The statement fails because the ON clause is invalid.</answer>
+
+  Answer: B
+-->
+  <!--
+  QUESTION NO: 55
+
+  You are the database designer for a training company that has databases on a SQL Server 2008
+  instance named SQL1. In a stored procedure, you want to display an informational custom
+  message when a user attempts to input an invalid student identification number. You only want to
+  notify the user and do not need a permanent record of this event.
+  Which statement should you use?
+
+  <answer choice="A">A. RAISERROR(50012, 10, 1);</answer>
+  <answer choice="B">B. RAISERROR('Invalid ID number', 10, 1);</answer>
+  <answer choice="C">C. RAISERROR('Invalid Student ID number', 5, 1) WITH LOG;</answer>
+  <answer choice="D">D. RAISERROR('Invalid Student Identifier', 25, 1) WITH SETERROR;</answer>
+
+  Answer: B
+-->
+  <!--
+  QUESTION NO: 56
+
+  You have a Parts table that contains an xml data type column named PartDetail. For the PartDetail
+  column, each row contains data formatted similar to the following:
+  <Part PartID="85" Description="Master Cylinder" />
+  You need to update the description in the PartDetail column for the part that has a PartID of 85.
+  You want to do so, with the least amount of effort.
+  What should you do?
+
+  <answer choice="A">A. Use a SELECT INTO statement that uses O PENXML in the FRO M clause and populates a temporary table and use an UPDATE statement that uses the temporary table.</answer>
+  <answer choice="B">B. Use a SELECT INTO statement that uses O PENXML in the FRO M clause.</answer>
+  <answer choice="C">C. Use an UPDA TE statement that calls the modify method in the SET clause.</answer>
+  <answer choice="D">D. Use an UPDATE statement that uses O PENXML in the SET clause.</answer>
+
+  Answer: C
+-->
+  <!--
+  QUESTION NO: 57
+
+  The Sales database has change tracking enabled. The Products table has the following columns:
+  * ProductID
+  * Name
+  * Category
+  * Description
+  * Price
+  Change tracking has been enabled by executing the following com m and:
+  ALTER TABLE Products
+  ENABLE CHANGE_TRACKING
+  WITH (TRACK_CO LUMNS_UPDATED = O N)
+  You need to retrieve a list of change s to the Products table.
+  What code should you use?
+
+  A. DECLARE @lastversion bigint;
+  SET @lastversion = CHANGE_TRACKING_CURRENT_VERSIO N();
+  INSERT INTO Versions (versionNum ) VALUES
+  (CHANGE_TRACKING_CURRENT_VERSIO N());
+  SELECT ProductID, SYS_CHANGE_VERSION, SYS_CHANGE_O PERATIO N,
+  SYS_CHANGE_CO LUMNS, SYS_CHANGE_CO NTEXT
+  FRO M CHANGETABLE (CHANGES Products, @lastversion);
+  B. DECLARE @lastversion bigint;
+  SET @lastversion = CHANGE_TRACKING_CURRENT_VERSIO N();
+  SELECT ProductID, [Nam e], Category, Description, Price
+  FRO M CHANGETABLE (CHANGES Products, @lastversion);
+  C. DECLARE @lastversion bigint;
+  SET @lastversion = SELECT TOP versionNum FRO M Versions O RDER BY
+  versionNum DESC;
+  INSERT INTO Versions (versionNum ) VALUES
+  (CHANGE_TRACKING_CURRENT_VERSIO N());
+  SELECT ProductID, [Nam e], Category, Description, Price
+  FRO M CHANGETABLE (CHANGES Products, @lastversion);
+  D. DECLARE @lastversion bigint;
+  SET @lastversion = SELECT TOP versionNum FROM Versions ORDER BY
+  versionNum DESC;
+  INSERT INTO Versions (versionNum) VA LUES
+  (CHA NGE_TRA CKING_CURRENT_VERSION());
+  SELECT ProductID, SYS_CHA NGE_VERSION, SYS_CHA NGE_OPERA TION,
+  SYS_CHA NGE_COLUMNS, SYS_CHA NGE_CONTEXT
+  FROM CHA NGETA BLE (CHA NGES Products, @lastversion);
+
+  Answer: D
+-->
+  <!--
+  QUESTION NO: 58
+
+  The Sales database is accessed by a 3rd-party application that cannot be modified.
+  The Sales database has an Orders table that includes a column named CC. The CC column can
+  be accessed by users in the Billing and CustomerService roles, provided the user is a permanent
+  company employee. The company hires temporary employees in the Billing and Customer Service
+  departments during peak periods. Temporary employees use the same applications to access
+  order information as perm anent employees. Temporary employees should not be able to access
+  the CC column. You need to configure permissions for the Orders table.
+  What should you do?
+
+  A. Grant the Billing and CustomerService roles the SELEC T permission on the table.
+  * Create a TemporaryEmployees database role and add all temporary employees to it.
+  * Revoke the Tem poraryEmployees database role the SELECT permission on the CC column.
+  B. Grant the Billing and CustomerService roles the SELEC T permission on the table.
+  * Create a view of the Orders table that does not include the CC column.
+  * Create a Tem poraryEmployees database role and add all temporary employees to it.
+  * Grant the Tem poraryEmployees database role the SELECT permission on the view.
+  C. Grant the Billing and CustomerService roles the SELEC T permission on the table.
+  * Create a view of the Orders table that does not include the CC column.
+  * Create a Tem poraryEmployees application role and add all temporary employees to it.
+  * Grant the Tem poraryEmployees application role the SELECT permission on the view.
+  D. Grant the Billing and CustomerService roles the SELECT permission on the table.
+  * Create a TemporaryEmployees database role and add all temporary employees to it.
+  * Deny the TemporaryEmployees database role the SELECT permission on the CC column.
+
+  Answer: D
+-->
+  <!--
+  QUESTION NO: 59
+
+  You have an ArchivedOrders table that contains all orders placed with your company. To save
+  storage space, you need to remove some of the older orders from the table. You are creating a
+  stored procedure that will accept a datetime parameter and remove all rows from the
+  ArchivedOrders table that were made before the specified date. Within your stored procedure, you
+  have declared a table variable named @var, which contains an OrderNum and OrderDate column.
+  You want to populate @var with information for each deleted order.
+  Which code should you add to your stored procedure?
+
+  A. DELETE FROM ArchivedOrders
+  O UTPUT OrderNum , OrderDate
+  INTO @var
+  WHERE OrderDate < @date;
+B. DELETE * FROM ArchivedOrders
+O UTPUT DELETED.OrderNum , DELETED.OrderDate
+INTO @var
+WHERE OrderDate < @date;
+C. DELETE FROM ArchivedOrders
+OUTPUT DELETED.OrderNum, DELETED.OrderDate
+INTO @var
+WHERE OrderDate < @date;
+D. DELETE FROM ArchivedOrders
+O UTPUT DELETED.OrderNum , DELETED.OrderDate
+WHERE OrderDate < @date;
+
+Answer: C
+-->
+<!--
+QUESTION NO: 60
+
+You are planning to use the Database Engine Tuning Advisor to optimize indexes.
+You need to create a trace file.
+Which events should you include?
+
+A. SQ L:StmtStarting, SQL:StmtRecom pile, and SQL:StmtCompleted
+B. SP:Starting, SP:Com pleted, SQL:StmtStarting and SQL:StmtCompleted
+C. SQ L:Stm tStarting and SQ L:StmtCom pleted
+D. RPC:Completed, SQL:BatchCompleted, and SP:StmtCompleted
+
+Answer: D
+-->
+<!--
+QUESTION NO: 61
+
+You have several tables that are logically joined using a complex join condition.
+You want to make it easier for users to write ad hoc queries, but prevent them from updating any
+of the underlying table s. With the least development effort, you would like to create a module to
+accept three input parameters and allow users to access the results of the query in the FRO M
+clause of their queries. However, you want to ensure that the tables are not dropped or modified in
+a way that would cause users' queries to fail.
+What should you do?
+
+A. Create an inline table-valued function that includes the WITH SCHEMA BINDING clause.
+B. Create a Com m on Table Expression (CTE).
+C. Create a CLR table -valued function.
+D. Create a scalar user-defined function that includes the WITH SCHEMABINDING clause.
+
+Answer: A
+-->
+<!--
+QUESTION NO: 62
+
+You migrate a third-party application from a server running SQ L Server 2005 to a server running
+SQ L Server 2008. You find that a mission critical query executes slowly on SQ L Server 2008.
+You need to improve the performance of the query.
+What should you do?
+
+A. Create a plan guide that has the USE PLA N hint.
+B. Create a plan guide and recompile the query with the USE PLAN hint.
+C. Recompile the query with the KEEPFIXED PLAN hint.
+D. Create a plan guide that has the KEEP PLAN hint.
+
+Answer: A
+-->
+<!--
+QUESTION NO: 63
+
+You are a database developer on an instance of SQL Server 2008. You have a ProductDetail
+table that contains three xml data type columns named Detail1, Detail2, and Detail3. The
+ProductDetail table also includes an ID column that is defined as the table's primary key.
+You frequently query the ProductDetail table using these xml columns in WHERE clauses. You
+want to create XML indexes to improve query performance. You create a primary XML index on
+the Detail2 column using the following statement:
+CREATE PRIMARY XML INDEX PXML_Index1
+ON ProductDetail(Detail2);
+No other XML indexes have been created.
+Which two statements could you successfully execute to create an additional XML index? (Choose
+two. Each correct answer is a complete solution.)
+
+A. CREATE XML INDEX SXML_Index1
+ON ProductDetail(Detail2);
+B. CREATE PRIMARY XML INDEX PXML_Index2
+ON ProductDetail(Detail1);
+C. CREATE XML INDEX SXML_Index2
+ON ProductDetail(Detail2)
+USING XML INDEX PXML_Index1 FOR VALUE;
+D. CREATE PRIMARY XML INDEX PXML_Index2
+ON ProductDetail(Detail2);
+
+Answer: B,C
+-->
+<!--
+QUESTION NO: 64
+
+You are the designer of a SQL database on an instance of SQL Server 2008. The Products table
+has a CHECK constraint that prevents the values in the UnitPrice column from being less than 10
+percent above the value in the Cost column.
+If a user attempts to change the UnitPrice for a product below the minimum allowed value, you
+want the UnitPrice to be automatically set to a value of 10 percent above that product's cost.
+Which CREATE TRIGGER statement should you use?
+
+A. CREATE TRIGGER CorrectPrice ON Products
+INSTEAD OF UPDATE AS
+IF UPDATE (UnitPrice)
+UPDATE Products SET UnitPrice = u.Cost * 1.1
+FROM Products p JOIN updated u ON p.ProductID = u.ProductID
+WHERE u.UnitPrice < u.Cost * 1.1;
+B. CREATE TRIGGER CorrectPrice ON Products
+FOR UPDATE AS
+IF UPDATE (UnitPrice)
+UPDATE Products SET UnitPrice = CASE
+WHEN i.UnitPrice < i.Cost * 1.1 THEN i.Cost * 1.1
+ELSE i.UnitPrice
+END
+FROM Products p JOIN inserted i on p.ProductID =i.ProductID;
+C. CREATE TRIGGER CorrectPrice ON Products
+INSTEAD OF UPDATE AS
+IF UPDATE(UnitPrice)
+UPDATE Products SET UnitPrice = CASE
+WHEN i.UnitPrice < i.Cost * 1.1 THEN i.Cost * 1.1
+ELSE i.UnitPrice
+END
+FROM Products p JOIN inserted i on p.ProductID =i.ProductID;
+D. CREATE TRIGGER CorrectPrice ON Products
+INSTEAD OF UPDATE AS
+IF UPDATE (UnitPrice)
+UPDATE Products p SET UnitPrice = i.Cost * 1.1
+FROM inserted i WHERE p.ProductID = i.ProductID
+AND i.UnitPrice < i.Cost * 1.1;
+
+Answer: C
+-->
+<!--
+QUESTION NO: 65
+
+You are the designer of a SQL database on an instance of SQL Server 2008. Your database
+contains a POHeader table and a PODetail table. You are creating a FOREIGN KEY constraint in
+the PODetail table that references the PONumber column in the POHeader table. If a user
+updates a purchase order number in the POHeader table, you want the corresponding child rows
+in the PODetail table to also be updated.
+Which clause should you include when creating the FOREIGN KEY constraint?
+
+A. CHECK
+B. ON UPDATE NO ACTION
+C. ON UPDATE CASCADE
+D. ON UPDATE SET NULL
+
+Answer: C
+
+-->
+
+</exam>
+
+
